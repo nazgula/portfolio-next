@@ -15,18 +15,74 @@ export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     const trimmed = input.trim();
-    if (!trimmed) return;
+    if (!trimmed || isLoading) return;
 
-    setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
+    const userMessage: Message = { role: "user", content: trimmed };
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInput("");
+    setIsLoading(true);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMessages }),
+      });
+
+      if (!res.ok || !res.body) throw new Error("Failed to get response");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+
+      // Add empty assistant message to fill via streaming
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+      let buffer = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          const data = line.replace(/^data: /, "");
+          if (data === "[DONE]") break;
+          try {
+            const text = JSON.parse(data) as string;
+            setMessages((prev) => {
+              const updated = [...prev];
+              const last = updated[updated.length - 1];
+              updated[updated.length - 1] = {
+                ...last,
+                content: last.content + text,
+              };
+              return updated;
+            });
+          } catch {
+            // skip malformed chunks
+          }
+        }
+      }
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: "Sorry, something went wrong." },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -99,6 +155,18 @@ export function ChatWidget() {
                 </div>
               </div>
             ))}
+            {isLoading &&
+              (messages.length === 0 ||
+                messages[messages.length - 1].role !== "assistant") && (
+                <div className="mb-3 flex justify-start">
+                  <div
+                    data-testid="thinking-indicator"
+                    className="max-w-[75%] rounded-lg bg-muted px-3 py-2 text-sm text-muted-foreground"
+                  >
+                    Thinking...
+                  </div>
+                </div>
+              )}
             <div ref={messagesEndRef} />
           </div>
 
@@ -116,7 +184,7 @@ export function ChatWidget() {
               onClick={handleSend}
               size="icon"
               aria-label="Send message"
-              disabled={!input.trim()}
+              disabled={!input.trim() || isLoading}
             >
               <Send className="h-4 w-4" />
             </Button>
