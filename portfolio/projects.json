@@ -1,0 +1,80 @@
+[
+  {
+    "name": "BitcoinOS",
+    "subtitle": "May 2024 – Nov 2025 | Web Designer & Full Stack Developer",
+    "description": "Full-stack development for a suite of Bitcoin-native products focused on protocol-level innovation and user experience. Responsibilities spanned building responsive frontend interfaces and designing scalable backend services, working across the full product lifecycle in a fast-moving, research-driven environment.",
+    "stack": "TypeScript · Node.js · React · SQL · RabbitMQ · Docker",
+    "imgDir": "bitcoinos-images",
+    "images": [
+      { "file": "wallet_login.jpeg", "caption": "MVP - Charms Bitcoin Web Wallet - Login page" },
+      { "file": "wallet_new.jpeg", "caption": "MVP - Charms Bitcoin Web Wallet - Create a new wallet" },
+      { "file": "wallet_funds.jpeg", "caption": "MVP - Charms Bitcoin Web Wallet - Funds list (Bitcoin & Charms)" },
+      { "file": "wallet_send.jpeg", "caption": "MVP - Charms Bitcoin Web Wallet - Send funds to another" },
+      { "file": "wallet_receive.jpeg", "caption": "MVP - Charms Bitcoin Web Wallet - Receive to this address" },
+      { "file": "wallet_history.jpeg", "caption": "MVP - Charms Bitcoin Web Wallet - Transactions history" },
+      { "file": "patagonia.jpeg", "caption": "MVP - patagonia trustless bridge - Bridge funds main page design (web/mobile)" },
+      { "file": "indexer_main.jpeg", "caption": "MVP - Charms block scanner - developers tool - main page" },
+      { "file": "indexer_charm.jpeg", "caption": "MVP - Charms block scanner - developers tool - A Charm page" },
+      { "file": "indexer_tx.jpeg", "caption": "MVP - Charms block scanner - developers tool -  A transaction page" }
+    ]
+  },
+  {
+    "name": "Defensync Israel",
+    "subtitle": "Jan 2024 – May 2024 | Web Designer & Frontend Developer",
+    "description": "Design and frontend development for a cutting-edge unmanned aerial vehicles (UAVs) defense system. Translated complex operational requirements into clean, functional interfaces, working closely with the engineering team to deliver a precise and reliable user experience for a high-stakes domain.",
+    "stack": "JavaScript · Tailwind CSS",
+    "imgDir": "defensync-images",
+    "images": [
+      { "file": "login.jpeg", "caption": "Defensync Login page" },
+      { "file": "drone.jpeg", "caption": "A drone + remote & Drone data while using the measuring tool" },
+      { "file": "jammer alert areas.jpeg", "caption": "A jammer's alert areas" }
+
+    ]
+  },
+  {
+    "name": "Deweb (BBS Network)",
+    "subtitle": "Jan 2022 – Dec 2023 | Frontend Developer",
+    "description": "Worked as part of a collaborative team designing and implementing new features and UI components for a blockchain-based social media platform. The platform aimed to decentralize the web through user-owned, community-governed message boards with integrated tokenized incentives for creators.",
+    "stack": "ReactJS · TypeScript · Redux · Tailwind CSS · Firestore",
+    "imgDir": "deweb-images",
+    "images": [
+      { "file": "dark_mode.jpeg", "caption": "Dark mode" },
+      { "file": "board.jpeg", "caption": "Board" },
+      { "file": "community_reports.jpeg", "caption": "Community reports" },
+      { "file": "post.jpeg", "caption": "Post" },
+      { "file": "post_page_view.jpeg", "caption": "Post page view" },
+      { "file": "post_responsive.jpeg", "caption": "Post responsive" },
+      { "file": "add_post.jpeg", "caption": "Add post" },
+      { "file": "my_boards.jpeg", "caption": "My boards" },
+      { "file": "add_board.jpeg", "caption": "Add board" }
+
+
+
+    ]
+  },
+  {
+    "name": "Freelance — Web Designer & Development",
+    "subtitle": "| Freelance designer & front developer",
+    "description": "Independently designed and developed commercial websites for a range of clients, handling the full process from requirements gathering and UX design through to implementation and launch. Projects included gender-equality.co.il and other client sites requiring custom design and functionality.",
+    "stack": "WordPress · CSS · JavaScript",
+    "imgDir": "freelance-images",
+    "images": [
+      { "file": "iway-0.jpeg", "caption": "Website (D/B) - Fitness holistic program website design & build - Top" },
+      { "file": "iway-1.jpeg", "caption": "Website (D/B) - Fitness holistic program website design & build - middle section" },
+      { "file": "iway-2.jpeg", "caption": "Website (D/B) - Fitness holistic program website design & build - middle section" },
+      { "file": "iway-3.jpeg", "caption": "Website (D/B) - Fitness holistic program website design & build - contact us" },
+       { "file": "20000words-0.jpeg", "caption": "Website (D/B) - Gender equality & improv. -  workshops and shows - Top" },
+      { "file": "20000words-1.jpeg", "caption": "Website (D/B) - Gender equality & improv. -  workshops and shows - middle section" },
+      { "file": "20000words-2.jpeg", "caption": "Website (D/B) - Gender equality & improv. -  workshops and shows- middle section" },
+      { "file": "sheli-0.jpeg", "caption": "Website (D/B) - Shelly rapport - A gender equality mentor - Top" },
+      { "file": "sheli-1.jpeg", "caption": "Website (D/B) - Shelly rapport - A gender equality mentor - middle section" },
+      { "file": "sheli-2.jpeg", "caption": "Website (D/B) - Shelly rapport - A gender equality mentor - middle section" },
+      { "file": "sheli-3.jpeg", "caption": "Website (D/B) - Shelly rapport - A gender equality mentor - contact us" },
+      { "file": "ursulium.png", "caption": "Website (D/B) - Ursulium - the multi lang art gallery of Suzy Rusk" },
+      { "file": "onboarding_0.png", "caption": "MVP Design - Loan request onboarding process - Start page" },
+      { "file": "onboarding_1.jpeg", "caption": "MVP Design - Loan request onboarding process - Customer identity" },
+      { "file": "onboarding_3.jpeg", "caption": "MVP Design - Loan request onboarding process - step 4 - Customer's income" },
+      { "file": "onboarding_4.jpeg", "caption": "MVP Design - Loan request onboarding process - step 5 -  Switch to whatsapp" }
+    ]
+  }
+]
