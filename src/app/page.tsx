@@ -52,6 +52,7 @@ export default function Home() {
           padding: "0",
           position: "relative",
           background: "var(--color-surface)",
+          minHeight: "clamp(320px, 45vw, 520px)",
           display: "flex",
           alignItems: "center",
           overflow: "hidden",
@@ -66,6 +67,7 @@ export default function Home() {
             top: 0,
             bottom: 0,
             width: "25%",
+            paddingTop: "16px",
             pointerEvents: "none",
           }}
         >
@@ -78,6 +80,7 @@ export default function Home() {
               width: "100%",
               height: "100%",
               objectFit: "cover",
+              objectPosition: "center 15%",
               maskImage: "linear-gradient(to right, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)",
               WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)",
             }}
@@ -114,14 +117,16 @@ export default function Home() {
 
         <p
           style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(22px, 3vw, 32px)",
-            fontWeight: 400,
+            fontFamily: "var(--font-body)",
+            fontSize: "clamp(11px, 1.2vw, 13px)",
+            fontWeight: 500,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
             color: "var(--color-text-muted)",
-            margin: "0 0 var(--sp-3) 0",
+            margin: "0 0 var(--sp-2) 0",
           }}
         >
-          I build what I want because I can.
+          Fullstack Developer &middot; UX Designer &middot; Building with AI
         </p>
 
         <div
@@ -136,16 +141,17 @@ export default function Home() {
 
         <p
           style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "clamp(11px, 1.2vw, 13px)",
-            fontWeight: 500,
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(22px, 3vw, 32px)",
+            fontWeight: 400,
             color: "var(--color-text-muted)",
-            margin: "0 0 var(--sp-2) 0",
+            margin: "0 auto var(--sp-3)",
+            textAlign: "center",
+            width: "100%",
+            display: "block",
           }}
         >
-          Fullstack Developer &middot; UX Designer &middot; Building with AI
+          I build what I want because I can.
         </p>
 
           <DecoRule />
@@ -158,7 +164,7 @@ export default function Home() {
         className="projects-container deco-pattern"
         style={{
           background: "var(--color-bg)",
-          padding: "var(--sp-8) var(--margin) var(--sp-8)",
+          padding: "var(--sp-8) var(--margin) 0",
         }}
       >
         <div
@@ -179,45 +185,6 @@ export default function Home() {
 
           return (
             <React.Fragment key={i}>
-            {i === 2 && (
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "var(--sp-4) 0 var(--sp-6)",
-                }}
-              >
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "inline-block",
-                    fontFamily: "var(--font-body)",
-                    fontSize: "13px",
-                    fontWeight: 500,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: "var(--color-accent-gold)",
-                    border: "1px solid var(--color-accent-gold)",
-                    borderRadius: "var(--r)",
-                    padding: "10px 28px",
-                    textDecoration: "none",
-                    transition:
-                      "background var(--dur-std) var(--ease-out), color var(--dur-std) var(--ease-out)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "var(--color-accent-gold)";
-                    e.currentTarget.style.color = "var(--color-text)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "transparent";
-                    e.currentTarget.style.color = "var(--color-accent-gold)";
-                  }}
-                >
-                  Full Resume
-                </a>
-              </div>
-            )}
             <div
               className={`project-card animate-fade-up ${isReverse ? "reverse" : ""}`}
               style={{
@@ -346,6 +313,63 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Resume CTA ── */}
+      <div
+        className="deco-pattern"
+        style={{
+          background: "var(--color-bg)",
+          padding: "64px var(--margin)",
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            height: "1px",
+            background: "var(--color-border)",
+            marginBottom: "48px",
+          }}
+        />
+        <a
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: "inline-block",
+            fontFamily: "var(--font-body)",
+            fontSize: "13px",
+            fontWeight: 500,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: "var(--color-accent-gold)",
+            border: "1px solid var(--color-accent-gold)",
+            borderRadius: "var(--r)",
+            padding: "10px 28px",
+            textDecoration: "none",
+            transition:
+              "background var(--dur-std) var(--ease-out), color var(--dur-std) var(--ease-out)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--color-accent-gold)";
+            e.currentTarget.style.color = "var(--color-text)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = "var(--color-accent-gold)";
+          }}
+        >
+          Full Resume
+        </a>
+        <div
+          style={{
+            width: "100%",
+            height: "1px",
+            background: "var(--color-border)",
+            marginTop: "48px",
+          }}
+        />
+      </div>
+
       {/* ── Footer ── */}
       <footer
         className="contact-section"
@@ -370,7 +394,7 @@ export default function Home() {
             href="mailto:maria.gur.dev@gmail.com"
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: "clamp(16px, 2vw, 20px)",
+              fontSize: "15px",
               fontWeight: 400,
               color: "var(--color-text)",
               textDecoration: "none",
@@ -413,7 +437,7 @@ export default function Home() {
               (e.currentTarget.style.color = "var(--color-text)")
             }
           >
-            <Linkedin size={20} />
+            <Linkedin size={18} strokeWidth={1.5} />
           </a>
 
           <a
@@ -434,7 +458,7 @@ export default function Home() {
               (e.currentTarget.style.color = "var(--color-text)")
             }
           >
-            <Github size={20} />
+            <Github size={18} strokeWidth={1.5} />
           </a>
         </div>
       </footer>
