@@ -42,52 +42,158 @@ export function Lightbox({ imgDir, images, index, onClose, onNav }: LightboxProp
 
   return (
     <div
-      className="fixed inset-0 z-[1000] flex flex-col items-center justify-center gap-4 bg-black/92 backdrop-blur-lg animate-in fade-in duration-250"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 1000,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "16px",
+        background: "rgba(15, 17, 23, 0.94)",
+        backdropFilter: "blur(12px)",
+      }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
+      {/* Close */}
       <button
         onClick={onClose}
-        className="absolute right-7 top-6 border-none bg-none text-3xl leading-none text-white opacity-70 transition-opacity hover:opacity-100"
         aria-label="Close lightbox"
+        style={{
+          position: "absolute",
+          top: "24px",
+          right: "28px",
+          background: "none",
+          border: "none",
+          color: "var(--color-text-inv)",
+          fontSize: "2rem",
+          cursor: "pointer",
+          opacity: 0.7,
+          transition: `opacity var(--dur-fast) var(--ease-out)`,
+          lineHeight: 1,
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+        onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.7")}
       >
         &times;
       </button>
 
+      {/* Prev */}
       <button
         onClick={() => handleNav(-1)}
-        className="absolute left-6 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/12 text-2xl text-white backdrop-blur-sm transition-colors hover:bg-white/22"
         aria-label="Previous image"
+        style={{
+          position: "absolute",
+          left: "24px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: "48px",
+          height: "48px",
+          borderRadius: "50%",
+          border: "1px solid rgba(201,168,76,0.3)",
+          background: "rgba(255,255,255,0.08)",
+          color: "var(--color-text-inv)",
+          fontSize: "1.6rem",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: `background var(--dur-fast) var(--ease-out)`,
+          backdropFilter: "blur(4px)",
+        }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.background = "rgba(201,168,76,0.2)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.background = "rgba(255,255,255,0.08)")
+        }
       >
         &#8249;
       </button>
 
-      <div className="relative" style={{ maxWidth: "88vw", maxHeight: "78vh" }}>
+      {/* Image */}
+      <div style={{ maxWidth: "88vw", maxHeight: "78vh", position: "relative" }}>
         <Image
           src={`/${imgDir}/${current.file}`}
           alt={current.caption || ""}
           width={1200}
           height={750}
-          className="rounded-lg object-contain shadow-2xl animate-in zoom-in-95 duration-300"
-          style={{ maxWidth: "88vw", maxHeight: "78vh", width: "auto", height: "auto" }}
+          style={{
+            maxWidth: "88vw",
+            maxHeight: "78vh",
+            width: "auto",
+            height: "auto",
+            borderRadius: "var(--r)",
+            objectFit: "contain",
+            boxShadow: "var(--shadow-dark)",
+          }}
         />
       </div>
 
+      {/* Caption */}
       {current.caption && (
-        <div className="max-w-[600px] px-6 text-center text-sm text-white/85">
+        <div
+          style={{
+            maxWidth: "600px",
+            padding: "0 24px",
+            textAlign: "center",
+            fontSize: "14px",
+            fontFamily: "var(--font-body)",
+            fontWeight: 300,
+            color: "rgba(245, 240, 232, 0.85)",
+          }}
+        >
           {current.caption}
         </div>
       )}
 
+      {/* Next */}
       <button
         onClick={() => handleNav(1)}
-        className="absolute right-6 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/12 text-2xl text-white backdrop-blur-sm transition-colors hover:bg-white/22"
         aria-label="Next image"
+        style={{
+          position: "absolute",
+          right: "24px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: "48px",
+          height: "48px",
+          borderRadius: "50%",
+          border: "1px solid rgba(201,168,76,0.3)",
+          background: "rgba(255,255,255,0.08)",
+          color: "var(--color-text-inv)",
+          fontSize: "1.6rem",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: `background var(--dur-fast) var(--ease-out)`,
+          backdropFilter: "blur(4px)",
+        }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.background = "rgba(201,168,76,0.2)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.background = "rgba(255,255,255,0.08)")
+        }
       >
         &#8250;
       </button>
 
+      {/* Counter */}
       {images.length > 1 && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-xs text-white/40">
+        <div
+          style={{
+            position: "absolute",
+            bottom: "24px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            fontFamily: "var(--font-mono)",
+            fontSize: "12px",
+            color: "rgba(245, 240, 232, 0.4)",
+          }}
+        >
           {index + 1} / {images.length}
         </div>
       )}

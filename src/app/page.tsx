@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChatWidget } from "@/components/chat-widget";
 import { ProjectGallery } from "@/components/project-gallery";
 import { Lightbox } from "@/components/lightbox";
+import { DecoRule } from "@/components/deco-rule";
 import projects from "@/data/projects.json";
 
 interface GalleryImage {
@@ -17,117 +18,327 @@ interface LightboxState {
   index: number;
 }
 
+function getRoleChipStyle(role: string) {
+  const r = role.toLowerCase();
+  if (r.includes("full stack") || r.includes("fullstack"))
+    return { background: "#D0EBEB", color: "#1A5A5A" };
+  if (r.includes("frontend"))
+    return { background: "#D4E0F8", color: "#1A3A8A" };
+  if (r.includes("web designer"))
+    return { background: "#F0E8D0", color: "#7A5A1A" };
+  if (r.includes("freelance"))
+    return { background: "#E8E0D0", color: "#5A4A35" };
+  return { background: "var(--color-tag-bg)", color: "var(--color-tag-text)" };
+}
+
 export default function Home() {
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
 
-  const openLightbox = (imgDir: string, images: GalleryImage[], index: number) => {
+  const openLightbox = (
+    imgDir: string,
+    images: GalleryImage[],
+    index: number
+  ) => {
     setLightbox({ imgDir, images, index });
   };
 
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: "var(--color-bg)",
-        color: "var(--color-text)",
-        fontFamily: "var(--font-body)",
-      }}
-    >
-      {/* Header */}
+    <div style={{ background: "var(--color-bg)", color: "var(--color-text)" }}>
+      {/* ── Hero ── */}
       <header
-        className="animate-fade-down border-b"
+        className="hero-section animate-fade-down"
         style={{
-          padding: "60px 80px 50px",
-          borderColor: "var(--color-border)",
+          padding: "var(--sp-16) var(--margin) var(--sp-6)",
+          textAlign: "center",
+          position: "relative",
+          background: "var(--color-surface)",
         }}
       >
+        <span className="corner-ornament top-left" />
+        <span className="corner-ornament top-right" />
+        <span className="corner-ornament bottom-left" />
+        <span className="corner-ornament bottom-right" />
+
         <h1
-          className="text-5xl font-bold tracking-tight"
-          style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.02em" }}
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(48px, 7vw, 88px)",
+            fontWeight: 300,
+            letterSpacing: "-0.03em",
+            lineHeight: 1.1,
+            color: "var(--color-text)",
+            margin: "0 0 var(--sp-2) 0",
+          }}
         >
           Maria Gurevich
         </h1>
-        <div
-          className="mt-1.5 text-base font-normal uppercase tracking-widest"
-          style={{ color: "var(--color-warm-grey)", letterSpacing: "0.06em" }}
+
+        <p
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(22px, 3vw, 32px)",
+            fontWeight: 400,
+            color: "var(--color-text-muted)",
+            margin: "0 0 var(--sp-3) 0",
+          }}
         >
-          Portfolio
-        </div>
+          I build what I want because I can.
+        </p>
+
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "320px",
+            height: "1px",
+            background: "var(--color-border)",
+            margin: "0 auto var(--sp-3)",
+          }}
+        />
+
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "clamp(11px, 1.2vw, 13px)",
+            fontWeight: 500,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: "var(--color-text-muted)",
+            margin: "0 0 var(--sp-2) 0",
+          }}
+        >
+          Fullstack Developer &middot; UX Designer &middot; Building with AI
+        </p>
+
+        <DecoRule />
       </header>
 
-      {/* Projects */}
-      <div className="projects-container" style={{ padding: "0 80px" }}>
+      {/* ── Work Section ── */}
+      <section
+        id="work"
+        className="projects-container deco-pattern"
+        style={{
+          background: "var(--color-bg)",
+          padding: "var(--sp-8) var(--margin) var(--sp-8)",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "var(--max-width)",
+            margin: "0 auto",
+          }}
+        >
         {projects.map((project, i) => {
           const parts = project.subtitle.split("|");
           const dateRange = parts[0]?.trim() || "";
           const role = parts[1]?.trim() || "";
+          const isReverse = i % 2 === 1;
+          const chipStyle = getRoleChipStyle(role);
+          const techItems = project.stack
+            ? project.stack.split("·").map((t) => t.trim())
+            : [];
 
           return (
             <div
               key={i}
-              className="flex gap-12 border-b animate-fade-up"
+              className={`project-card animate-fade-up ${isReverse ? "reverse" : ""}`}
               style={{
-                padding: "56px 0",
-                borderColor: "var(--color-border)",
+                display: "flex",
+                flexDirection: isReverse ? "row-reverse" : "row",
+                gap: "var(--sp-6)",
+                padding: "var(--sp-6) 0",
+                marginBottom: "var(--sp-6)",
+                background: "var(--color-surface)",
+                borderRadius: "var(--r)",
+                borderTop: "2px solid var(--color-accent-gold)",
+                boxShadow: "var(--shadow-card)",
                 animationDelay: `${i * 0.15}s`,
                 animationFillMode: "both",
               }}
             >
               {/* Project Info */}
-              <div className="flex-1" style={{ flexBasis: "58%", minWidth: 0 }}>
+              <div
+                style={{
+                  flex: "1 1 55%",
+                  minWidth: 0,
+                  padding: "var(--sp-4) var(--sp-6)",
+                }}
+              >
                 <h2
-                  className="mb-2 text-3xl font-bold"
                   style={{
                     fontFamily: "var(--font-display)",
+                    fontSize: "28px",
+                    fontWeight: 500,
                     letterSpacing: "-0.01em",
+                    color: "var(--color-text)",
+                    marginBottom: "var(--sp-1)",
                   }}
                 >
                   {project.name}
                 </h2>
+
                 <div
-                  className="mb-4 flex flex-wrap items-center gap-2 text-sm"
-                  style={{ color: "var(--color-warm-grey)" }}
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    gap: "var(--sp-1)",
+                    marginBottom: "var(--sp-2)",
+                  }}
                 >
-                  {dateRange && <span>{dateRange}</span>}
+                  {dateRange && (
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "12px",
+                        color: "var(--color-text-dim)",
+                        letterSpacing: "0.06em",
+                      }}
+                    >
+                      {dateRange}
+                    </span>
+                  )}
                   {role && (
                     <span
-                      className="rounded-full px-2.5 py-0.5 text-xs font-medium"
                       style={{
-                        background: "var(--color-accent-light)",
-                        color: "var(--color-accent)",
+                        ...chipStyle,
+                        borderRadius: "var(--r-pill)",
+                        padding: "2px 12px",
+                        fontSize: "11px",
+                        fontWeight: 500,
+                        fontFamily: "var(--font-body)",
                       }}
                     >
                       {role}
                     </span>
                   )}
                 </div>
+
                 <p
-                  className="mb-3.5 max-w-[560px] text-base leading-7"
-                  style={{ color: "var(--color-text-secondary)" }}
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontSize: "18px",
+                    fontWeight: 300,
+                    lineHeight: 1.7,
+                    color: "var(--color-text-muted)",
+                    maxWidth: "560px",
+                    marginBottom: "var(--sp-2)",
+                  }}
                 >
                   {project.description}
                 </p>
-                {project.stack && (
+
+                {techItems.length > 0 && (
                   <div
-                    className="text-sm italic"
-                    style={{ color: "var(--color-warm-grey)" }}
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      letterSpacing: "0.04em",
+                      color: "var(--color-text)",
+                    }}
                   >
-                    {project.stack}
+                    {techItems.join(" · ")}
                   </div>
                 )}
               </div>
 
               {/* Gallery */}
-              <ProjectGallery
-                imgDir={project.imgDir}
-                images={project.images || []}
-                projectName={project.name}
-                onImageClick={openLightbox}
-              />
+              <div
+                className="project-gallery-col"
+                style={{
+                  flex: "1 1 45%",
+                  minWidth: 0,
+                  padding: "var(--sp-2) var(--sp-4)",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <ProjectGallery
+                  imgDir={project.imgDir}
+                  images={project.images || []}
+                  projectName={project.name}
+                  onImageClick={openLightbox}
+                />
+              </div>
             </div>
           );
         })}
+        </div>
+      </section>
+
+      {/* ── Resume CTA ── */}
+      <div
+        className="deco-pattern"
+        style={{
+          background: "var(--color-bg)",
+          padding: "var(--sp-8) var(--margin) var(--sp-8)",
+          textAlign: "center",
+        }}
+      >
+        <a
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: "inline-block",
+            fontFamily: "var(--font-body)",
+            fontSize: "13px",
+            fontWeight: 500,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            color: "var(--color-accent-gold)",
+            border: "1px solid var(--color-accent-gold)",
+            borderRadius: "var(--r)",
+            padding: "10px 28px",
+            textDecoration: "none",
+            transition:
+              "background var(--dur-std) var(--ease-out), color var(--dur-std) var(--ease-out)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--color-accent-gold)";
+            e.currentTarget.style.color = "var(--color-text)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = "var(--color-accent-gold)";
+          }}
+        >
+          Full Resume
+        </a>
       </div>
+
+      {/* ── Footer ── */}
+      <footer
+        className="contact-section"
+        style={{
+          background: "var(--color-surface)",
+          padding: "var(--sp-8) var(--margin)",
+          textAlign: "center",
+        }}
+      >
+        <DecoRule className="mb-6" />
+
+        <a
+          href="mailto:maria.gur.dev@gmail.com"
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "clamp(16px, 2vw, 20px)",
+            fontWeight: 400,
+            color: "var(--color-text)",
+            textDecoration: "none",
+            transition: "color var(--dur-std) var(--ease-out)",
+            display: "inline-block",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.color = "var(--color-accent-gold)")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.color = "var(--color-text)")
+          }
+        >
+          maria.gur.dev@gmail.com
+        </a>
+      </footer>
 
       {/* Lightbox */}
       {lightbox && (
@@ -136,7 +347,9 @@ export default function Home() {
           images={lightbox.images}
           index={lightbox.index}
           onClose={() => setLightbox(null)}
-          onNav={(idx) => setLightbox((prev) => prev && { ...prev, index: idx })}
+          onNav={(idx) =>
+            setLightbox((prev) => prev && { ...prev, index: idx })
+          }
         />
       )}
 

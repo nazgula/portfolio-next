@@ -25,11 +25,27 @@ export function ProjectGallery({
   const hasImages = images.length > 0;
 
   return (
-    <div className="flex flex-1 flex-col gap-3" style={{ flexBasis: "42%", minWidth: 0 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%" }}>
       <div
-        className="group relative aspect-[16/10] w-full cursor-pointer overflow-hidden rounded-xl shadow-md transition-shadow hover:shadow-lg"
-        style={{ background: "var(--color-border)" }}
+        className="group"
         onClick={() => hasImages && onImageClick(imgDir, images, currentSlide)}
+        style={{
+          position: "relative",
+          width: "100%",
+          aspectRatio: "16 / 10",
+          borderRadius: "var(--r)",
+          overflow: "hidden",
+          background: "var(--color-border)",
+          cursor: hasImages ? "pointer" : "default",
+          boxShadow: "var(--shadow-card)",
+          transition: `box-shadow var(--dur-std) var(--ease-out)`,
+        }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.boxShadow = "var(--shadow-lift)")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.boxShadow = "var(--shadow-card)")
+        }
       >
         {hasImages ? (
           <>
@@ -38,29 +54,63 @@ export function ProjectGallery({
               alt={`${projectName} screenshot`}
               fill
               className="object-cover transition-transform duration-400 group-hover:scale-[1.02]"
-              sizes="(max-width: 900px) 100vw, 42vw"
+              sizes="(max-width: 900px) 100vw, 45vw"
             />
-            <span className="pointer-events-none absolute bottom-3 right-3 rounded-md bg-black/55 px-2.5 py-1 text-xs text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+            <span
+              style={{
+                position: "absolute",
+                bottom: "12px",
+                right: "12px",
+                background: "rgba(0,0,0,0.55)",
+                color: "#fff",
+                padding: "4px 10px",
+                borderRadius: "var(--r)",
+                fontSize: "11px",
+                fontFamily: "var(--font-mono)",
+                pointerEvents: "none",
+                opacity: 0,
+                transition: `opacity var(--dur-std) var(--ease-out)`,
+                backdropFilter: "blur(4px)",
+              }}
+              className="group-hover:!opacity-100"
+            >
               Click to expand
             </span>
           </>
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#e8e5df] to-[#d9d5ce] text-sm text-[var(--color-warm-grey)]">
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "13px",
+              fontFamily: "var(--font-body)",
+              color: "var(--color-text-dim)",
+              background: "linear-gradient(135deg, var(--color-surface) 0%, var(--color-border) 100%)",
+            }}
+          >
             Images coming soon
           </div>
         )}
       </div>
       {hasImages && images.length > 1 && (
-        <div className="flex justify-center gap-1.5 py-1">
+        <div style={{ display: "flex", justifyContent: "center", gap: "6px", padding: "4px 0" }}>
           {images.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentSlide(i)}
-              className="h-2 w-2 rounded-full transition-colors"
               style={{
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                border: "none",
+                cursor: "pointer",
+                transition: `background var(--dur-fast) var(--ease-out)`,
                 background:
                   i === currentSlide
-                    ? "var(--color-warm-grey)"
+                    ? "var(--color-accent-gold)"
                     : "var(--color-border)",
               }}
               aria-label={`Go to slide ${i + 1}`}

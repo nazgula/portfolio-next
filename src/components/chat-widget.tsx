@@ -1,14 +1,30 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bot, Send, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Send, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface Message {
   role: "user" | "assistant";
   content: string;
+}
+
+function ChatBubbleIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    </svg>
+  );
 }
 
 export function ChatWidget() {
@@ -44,7 +60,6 @@ export function ChatWidget() {
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
 
-      // Add empty assistant message to fill via streaming
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       let buffer = "";
@@ -99,9 +114,34 @@ export function ChatWidget() {
         <button
           onClick={() => setIsOpen(true)}
           aria-label="Open chat"
-          className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105"
+          className="animate-chat-pulse"
+          style={{
+            position: "fixed",
+            bottom: "32px",
+            right: "32px",
+            zIndex: 50,
+            width: "56px",
+            height: "56px",
+            borderRadius: "50%",
+            background: "var(--color-bg-deep)",
+            border: "2px solid var(--color-accent-gold)",
+            color: "var(--color-accent-gold)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            transition: `background var(--dur-std) var(--ease-out), color var(--dur-std) var(--ease-out)`,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--color-accent-gold)";
+            e.currentTarget.style.color = "var(--color-bg-deep)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "var(--color-bg-deep)";
+            e.currentTarget.style.color = "var(--color-accent-gold)";
+          }}
         >
-          <Bot className="h-6 w-6" />
+          <ChatBubbleIcon />
         </button>
       )}
 
@@ -110,27 +150,84 @@ export function ChatWidget() {
         <div
           role="dialog"
           aria-label="Chat dialog"
-          className="fixed bottom-6 right-6 z-50 flex h-[28rem] w-80 flex-col rounded-xl border border-border bg-card shadow-2xl"
+          style={{
+            position: "fixed",
+            bottom: "32px",
+            right: "32px",
+            zIndex: 50,
+            width: "320px",
+            height: "28rem",
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: "var(--r-lg)",
+            border: "1px solid var(--color-border)",
+            background: "var(--color-surface)",
+            boxShadow: "var(--shadow-lift)",
+          }}
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-border px-4 py-3">
-            <div className="flex items-center gap-2">
-              <Bot className="h-5 w-5 text-primary" />
-              <span className="text-sm font-semibold">Chat</span>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "var(--sp-2) var(--sp-3)",
+              borderBottom: "1px solid var(--color-border)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <ChatBubbleIcon className="w-5 h-5" />
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  color: "var(--color-text)",
+                }}
+              >
+                Chat
+              </span>
             </div>
             <button
               onClick={() => setIsOpen(false)}
               aria-label="Close chat"
-              className="rounded p-1 text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px",
+                borderRadius: "var(--r-sm)",
+                color: "var(--color-text-muted)",
+                transition: `color var(--dur-fast) var(--ease-out)`,
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = "var(--color-text)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "var(--color-text-muted)")
+              }
             >
               <X className="h-4 w-4" />
             </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-3">
+          <div
+            style={{
+              flex: 1,
+              overflowY: "auto",
+              padding: "var(--sp-2) var(--sp-3)",
+            }}
+          >
             {messages.length === 0 && (
-              <p className="text-center text-sm text-muted-foreground">
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: "14px",
+                  color: "var(--color-text-muted)",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
                 How can I help you?
               </p>
             )}
@@ -144,12 +241,24 @@ export function ChatWidget() {
               >
                 <div
                   data-testid={`message-${msg.role}`}
-                  className={cn(
-                    "max-w-[75%] rounded-lg px-3 py-2 text-sm",
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  )}
+                  style={{
+                    maxWidth: "75%",
+                    borderRadius: "var(--r-lg)",
+                    padding: "8px 12px",
+                    fontSize: "14px",
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 300,
+                    lineHeight: 1.5,
+                    ...(msg.role === "user"
+                      ? {
+                          background: "var(--color-bg-deep)",
+                          color: "var(--color-text-inv)",
+                        }
+                      : {
+                          background: "var(--color-tag-bg)",
+                          color: "var(--color-text)",
+                        }),
+                  }}
                 >
                   {msg.content}
                 </div>
@@ -161,7 +270,15 @@ export function ChatWidget() {
                 <div className="mb-3 flex justify-start">
                   <div
                     data-testid="thinking-indicator"
-                    className="max-w-[75%] rounded-lg bg-muted px-3 py-2 text-sm text-muted-foreground"
+                    style={{
+                      maxWidth: "75%",
+                      borderRadius: "var(--r-lg)",
+                      padding: "8px 12px",
+                      fontSize: "14px",
+                      fontFamily: "var(--font-body)",
+                      background: "var(--color-tag-bg)",
+                      color: "var(--color-text-muted)",
+                    }}
                   >
                     Thinking...
                   </div>
@@ -171,23 +288,70 @@ export function ChatWidget() {
           </div>
 
           {/* Input area */}
-          <div className="flex items-center gap-2 border-t border-border px-3 py-3">
-            <Input
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "var(--sp-2) var(--sp-2)",
+              borderTop: "1px solid var(--color-border)",
+            }}
+          >
+            <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type a message..."
               aria-label="Chat input"
-              className="flex-1"
+              style={{
+                flex: 1,
+                height: "36px",
+                padding: "0 12px",
+                borderRadius: "var(--r)",
+                border: "1px solid var(--color-border)",
+                background: "var(--color-bg)",
+                fontFamily: "var(--font-body)",
+                fontSize: "14px",
+                fontWeight: 300,
+                color: "var(--color-text)",
+                outline: "none",
+                transition: `border-color var(--dur-fast) var(--ease-out)`,
+              }}
+              onFocus={(e) =>
+                (e.currentTarget.style.borderColor = "var(--color-accent-gold)")
+              }
+              onBlur={(e) =>
+                (e.currentTarget.style.borderColor = "var(--color-border)")
+              }
             />
-            <Button
+            <button
               onClick={handleSend}
-              size="icon"
               aria-label="Send message"
               disabled={!input.trim() || isLoading}
+              style={{
+                width: "36px",
+                height: "36px",
+                borderRadius: "var(--r)",
+                border: "none",
+                background:
+                  !input.trim() || isLoading
+                    ? "var(--color-border)"
+                    : "var(--color-bg-deep)",
+                color:
+                  !input.trim() || isLoading
+                    ? "var(--color-text-dim)"
+                    : "var(--color-text-inv)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor:
+                  !input.trim() || isLoading ? "not-allowed" : "pointer",
+                transition: `background var(--dur-fast) var(--ease-out)`,
+                flexShrink: 0,
+              }}
             >
               <Send className="h-4 w-4" />
-            </Button>
+            </button>
           </div>
         </div>
       )}
