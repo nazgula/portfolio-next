@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { ChatWidget } from "@/components/chat-widget";
 import { ProjectGallery } from "@/components/project-gallery";
 import { Lightbox } from "@/components/lightbox";
 import { DecoRule } from "@/components/deco-rule";
+import { Linkedin, Github } from "lucide-react";
 import projects from "@/data/projects.json";
 
 interface GalleryImage {
@@ -48,18 +49,56 @@ export default function Home() {
       <header
         className="hero-section animate-fade-down"
         style={{
-          padding: "var(--sp-16) var(--margin) var(--sp-6)",
-          textAlign: "center",
+          padding: "0",
           position: "relative",
           background: "var(--color-surface)",
+          display: "flex",
+          alignItems: "center",
+          overflow: "hidden",
         }}
       >
-        <span className="corner-ornament top-left" />
-        <span className="corner-ornament top-right" />
-        <span className="corner-ornament bottom-left" />
-        <span className="corner-ornament bottom-right" />
+        {/* Hero Image — left-aligned, full height */}
+        {/* Hero Image — left, fading inward */}
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: "25%",
+            pointerEvents: "none",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/creation.png"
+            alt=""
+            style={{
+              display: "block",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              maskImage: "linear-gradient(to right, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)",
+              WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)",
+            }}
+          />
+        </div>
 
-        <h1
+        {/* Hero Text */}
+        <div
+          style={{
+            width: "100%",
+            padding: "var(--sp-12) var(--margin) var(--sp-6)",
+            textAlign: "center",
+            position: "relative",
+          }}
+        >
+          <span className="corner-ornament top-left" />
+          <span className="corner-ornament top-right" />
+          <span className="corner-ornament bottom-left" />
+          <span className="corner-ornament bottom-right" />
+
+          <h1
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "clamp(48px, 7vw, 88px)",
@@ -109,7 +148,8 @@ export default function Home() {
           Fullstack Developer &middot; UX Designer &middot; Building with AI
         </p>
 
-        <DecoRule />
+          <DecoRule />
+        </div>
       </header>
 
       {/* ── Work Section ── */}
@@ -138,8 +178,47 @@ export default function Home() {
             : [];
 
           return (
+            <React.Fragment key={i}>
+            {i === 2 && (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "var(--sp-4) 0 var(--sp-6)",
+                }}
+              >
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-block",
+                    fontFamily: "var(--font-body)",
+                    fontSize: "13px",
+                    fontWeight: 500,
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    color: "var(--color-accent-gold)",
+                    border: "1px solid var(--color-accent-gold)",
+                    borderRadius: "var(--r)",
+                    padding: "10px 28px",
+                    textDecoration: "none",
+                    transition:
+                      "background var(--dur-std) var(--ease-out), color var(--dur-std) var(--ease-out)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--color-accent-gold)";
+                    e.currentTarget.style.color = "var(--color-text)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
+                    e.currentTarget.style.color = "var(--color-accent-gold)";
+                  }}
+                >
+                  Full Resume
+                </a>
+              </div>
+            )}
             <div
-              key={i}
               className={`project-card animate-fade-up ${isReverse ? "reverse" : ""}`}
               style={{
                 display: "flex",
@@ -261,51 +340,11 @@ export default function Home() {
                 />
               </div>
             </div>
+            </React.Fragment>
           );
         })}
         </div>
       </section>
-
-      {/* ── Resume CTA ── */}
-      <div
-        className="deco-pattern"
-        style={{
-          background: "var(--color-bg)",
-          padding: "var(--sp-8) var(--margin) var(--sp-8)",
-          textAlign: "center",
-        }}
-      >
-        <a
-          href="/resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: "inline-block",
-            fontFamily: "var(--font-body)",
-            fontSize: "13px",
-            fontWeight: 500,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "var(--color-accent-gold)",
-            border: "1px solid var(--color-accent-gold)",
-            borderRadius: "var(--r)",
-            padding: "10px 28px",
-            textDecoration: "none",
-            transition:
-              "background var(--dur-std) var(--ease-out), color var(--dur-std) var(--ease-out)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--color-accent-gold)";
-            e.currentTarget.style.color = "var(--color-text)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "var(--color-accent-gold)";
-          }}
-        >
-          Full Resume
-        </a>
-      </div>
 
       {/* ── Footer ── */}
       <footer
@@ -318,26 +357,86 @@ export default function Home() {
       >
         <DecoRule className="mb-6" />
 
-        <a
-          href="mailto:maria.gur.dev@gmail.com"
+        <div
           style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "clamp(16px, 2vw, 20px)",
-            fontWeight: 400,
-            color: "var(--color-text)",
-            textDecoration: "none",
-            transition: "color var(--dur-std) var(--ease-out)",
-            display: "inline-block",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "var(--sp-3)",
+            flexWrap: "wrap",
           }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.color = "var(--color-accent-gold)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.color = "var(--color-text)")
-          }
         >
-          maria.gur.dev@gmail.com
-        </a>
+          <a
+            href="mailto:maria.gur.dev@gmail.com"
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(16px, 2vw, 20px)",
+              fontWeight: 400,
+              color: "var(--color-text)",
+              textDecoration: "none",
+              transition: "color var(--dur-std) var(--ease-out)",
+              display: "inline-block",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "var(--color-accent-gold)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "var(--color-text)")
+            }
+          >
+            maria.gur.dev@gmail.com
+          </a>
+
+          <span
+            style={{
+              width: "1px",
+              height: "20px",
+              background: "var(--color-border)",
+            }}
+          />
+
+          <a
+            href="https://www.linkedin.com/in/maria-gurevich-197b356a/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            style={{
+              color: "var(--color-text)",
+              transition: "color var(--dur-std) var(--ease-out)",
+              display: "inline-flex",
+              alignItems: "center",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "var(--color-accent-gold)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "var(--color-text)")
+            }
+          >
+            <Linkedin size={20} />
+          </a>
+
+          <a
+            href="https://github.com/nazgula"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            style={{
+              color: "var(--color-text)",
+              transition: "color var(--dur-std) var(--ease-out)",
+              display: "inline-flex",
+              alignItems: "center",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "var(--color-accent-gold)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "var(--color-text)")
+            }
+          >
+            <Github size={20} />
+          </a>
+        </div>
       </footer>
 
       {/* Lightbox */}
