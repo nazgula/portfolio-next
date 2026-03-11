@@ -4,9 +4,37 @@ const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+const MAX_MESSAGES = 20;
+
+function isValidMessages(
+  messages: unknown
+): messages is { role: "user" | "assistant"; content: string }[] {
+  return (
+    Array.isArray(messages) &&
+    messages.length > 0 &&
+    messages.length <= MAX_MESSAGES &&
+    messages.every(
+      (m) =>
+        typeof m === "object" &&
+        m !== null &&
+        (m.role === "user" || m.role === "assistant") &&
+        typeof m.content === "string" &&
+        m.content.length > 0 &&
+        m.content.length <= 2000
+    )
+  );
+}
+
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
+
+    if (!isValidMessages(messages)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid messages format." }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
     const stream = await client.messages.stream({
       model: "claude-haiku-4-5-20251001",

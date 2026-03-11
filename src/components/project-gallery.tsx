@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-
-interface GalleryImage {
-  file: string;
-  caption: string;
-}
+import type { GalleryImage } from "@/lib/types";
 
 interface ProjectGalleryProps {
   imgDir: string;

@@ -1,18 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { ChatWidget } from "@/components/chat-widget";
 import { ProjectGallery } from "@/components/project-gallery";
 import { Lightbox } from "@/components/lightbox";
 import { DecoRule } from "@/components/deco-rule";
 import { Linkedin, Github } from "lucide-react";
 import { InlineChat } from "@/components/inline-chat";
+import type { GalleryImage } from "@/lib/types";
 import projects from "@/data/projects.json";
-
-interface GalleryImage {
-  file: string;
-  caption: string;
-}
 
 interface LightboxState {
   imgDir: string;
@@ -61,7 +57,6 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
-        {/* Hero Image — left-aligned, full height */}
         {/* Hero Image — left, fading inward */}
         <div
           style={{
@@ -291,18 +286,15 @@ export default function Home() {
         </div>
 
         {projects.map((project, i) => {
-          const parts = project.subtitle.split("|");
-          const dateRange = parts[0]?.trim() || "";
-          const role = parts[1]?.trim() || "";
           const isReverse = i % 2 === 1;
-          const chipStyle = getRoleChipStyle(role);
+          const chipStyle = getRoleChipStyle(project.role);
           const techItems = project.stack
             ? project.stack.split("·").map((t) => t.trim())
             : [];
 
           return (
-            <React.Fragment key={i}>
             <div
+              key={i}
               className={`project-card animate-fade-up ${isReverse ? "reverse" : ""}`}
               style={{
                 display: "flex",
@@ -348,7 +340,7 @@ export default function Home() {
                     marginBottom: "var(--sp-2)",
                   }}
                 >
-                  {dateRange && (
+                  {project.dateRange && (
                     <span
                       style={{
                         fontFamily: "var(--font-mono)",
@@ -357,10 +349,10 @@ export default function Home() {
                         letterSpacing: "0.06em",
                       }}
                     >
-                      {dateRange}
+                      {project.dateRange}
                     </span>
                   )}
-                  {role && (
+                  {project.role && (
                     <span
                       style={{
                         ...chipStyle,
@@ -371,7 +363,7 @@ export default function Home() {
                         fontFamily: "var(--font-body)",
                       }}
                     >
-                      {role}
+                      {project.role}
                     </span>
                   )}
                 </div>
@@ -424,7 +416,6 @@ export default function Home() {
                 />
               </div>
             </div>
-            </React.Fragment>
           );
         })}
         </div>
@@ -435,7 +426,7 @@ export default function Home() {
         className="deco-pattern"
         style={{
           background: "var(--color-bg)",
-          padding: "64px var(--margin)",
+          padding: "var(--sp-8) var(--margin)",
           textAlign: "center",
         }}
       >
@@ -444,7 +435,7 @@ export default function Home() {
             width: "100%",
             height: "1px",
             background: "var(--color-border)",
-            marginBottom: "48px",
+            marginBottom: "var(--sp-6)",
           }}
         />
         <a
@@ -482,7 +473,7 @@ export default function Home() {
             width: "100%",
             height: "1px",
             background: "var(--color-border)",
-            marginTop: "48px",
+            marginTop: "var(--sp-6)",
           }}
         />
       </div>

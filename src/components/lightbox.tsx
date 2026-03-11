@@ -2,15 +2,11 @@
 
 import { useEffect, useCallback } from "react";
 import Image from "next/image";
-
-interface LightboxImage {
-  file: string;
-  caption: string;
-}
+import type { GalleryImage } from "@/lib/types";
 
 interface LightboxProps {
   imgDir: string;
-  images: LightboxImage[];
+  images: GalleryImage[];
   index: number;
   onClose: () => void;
   onNav: (index: number) => void;

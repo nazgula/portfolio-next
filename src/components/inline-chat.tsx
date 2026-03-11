@@ -1,12 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import { Send } from "lucide-react";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
+import { useChat } from "@/lib/use-chat";
+import type { Message } from "@/lib/types";
 
 const SEED_MESSAGES: Message[] = [
   { role: "user", content: "What has Maria built with AI?" },
@@ -18,85 +14,15 @@ const SEED_MESSAGES: Message[] = [
 ];
 
 export function InlineChat() {
-  const [messages, setMessages] = useState<Message[]>(SEED_MESSAGES);
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages]);
-
-  const handleSend = async () => {
-    const trimmed = input.trim();
-    if (!trimmed || isLoading) return;
-
-    const userMessage: Message = { role: "user", content: trimmed };
-    const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
-    setInput("");
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
-      });
-
-      if (!res.ok || !res.body) throw new Error("Failed to get response");
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-
-      let buffer = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n\n");
-        buffer = lines.pop() || "";
-
-        for (const line of lines) {
-          const data = line.replace(/^data: /, "");
-          if (data === "[DONE]") break;
-          try {
-            const text = JSON.parse(data) as string;
-            setMessages((prev) => {
-              const updated = [...prev];
-              const last = updated[updated.length - 1];
-              updated[updated.length - 1] = {
-                ...last,
-                content: last.content + text,
-              };
-              return updated;
-            });
-          } catch {
-            // skip malformed chunks
-          }
-        }
-      }
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Sorry, something went wrong." },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
+  const {
+    messages,
+    input,
+    setInput,
+    isLoading,
+    scrollRef,
+    handleSend,
+    handleKeyDown,
+  } = useChat(SEED_MESSAGES);
 
   return (
     <div
