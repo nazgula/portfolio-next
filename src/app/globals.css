@@ -282,6 +282,21 @@
     );
 }
 
+/* ── Inline Chat Scrollbar ── */
+.inline-chat-messages::-webkit-scrollbar {
+  width: 3px;
+}
+.inline-chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+.inline-chat-messages::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+.inline-chat-messages::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-gold);
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .hero-section { padding: var(--sp-8) var(--sp-4) !important; }

@@ -29,6 +29,7 @@ It is refined and confident, never ornate or heavy.
 | Full Stack        | #D0EBEB   | #1A5A5A  |
 | Frontend          | #D4E0F8   | #1A3A8A  |
 | Web Designer      | #F0E8D0   | #7A5A1A  |
+| AI Engineer       | #E8E0F0   | #3A1A5A  |
 | Freelance         | #E8E0D0   | #5A4A35  |
 | Default           | var(--color-tag-bg) #E2DAC8 | var(--color-tag-text) #4A4235 |
 

@@ -6,6 +6,7 @@ import { ProjectGallery } from "@/components/project-gallery";
 import { Lightbox } from "@/components/lightbox";
 import { DecoRule } from "@/components/deco-rule";
 import { Linkedin, Github } from "lucide-react";
+import { InlineChat } from "@/components/inline-chat";
 import projects from "@/data/projects.json";
 
 interface GalleryImage {
@@ -27,6 +28,8 @@ function getRoleChipStyle(role: string) {
     return { background: "#D4E0F8", color: "#1A3A8A" };
   if (r.includes("web designer"))
     return { background: "#F0E8D0", color: "#7A5A1A" };
+  if (r.includes("ai engineer"))
+    return { background: "#E8E0F0", color: "#3A1A5A" };
   if (r.includes("freelance"))
     return { background: "#E8E0D0", color: "#5A4A35" };
   return { background: "var(--color-tag-bg)", color: "var(--color-tag-text)" };
@@ -173,6 +176,120 @@ export default function Home() {
             margin: "0 auto",
           }}
         >
+        {/* ── Portfolio Assistant (AI project card) ── */}
+        <div
+          className="project-card animate-fade-up"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "var(--sp-6)",
+            padding: "var(--sp-2) 0",
+            marginBottom: "var(--sp-12)",
+            background: "var(--color-surface)",
+            borderRadius: "var(--r)",
+            boxShadow: "var(--shadow-card)",
+            animationFillMode: "both",
+          }}
+        >
+          {/* Text side */}
+          <div
+            style={{
+              flex: "1 1 55%",
+              minWidth: 0,
+              padding: "var(--sp-2) var(--sp-6)",
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "28px",
+                fontWeight: 500,
+                letterSpacing: "-0.01em",
+                color: "var(--color-text)",
+                marginBottom: "var(--sp-1)",
+              }}
+            >
+              Portfolio Assistant
+            </h2>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "center",
+                gap: "var(--sp-1)",
+                marginBottom: "var(--sp-2)",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "12px",
+                  color: "var(--color-text-dim)",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                2025 · Ongoing
+              </span>
+              <span
+                style={{
+                  background: "#E8E0F0",
+                  color: "#3A1A5A",
+                  borderRadius: "var(--r-pill)",
+                  padding: "2px 12px",
+                  fontSize: "11px",
+                  fontWeight: 500,
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                AI Engineer
+              </span>
+            </div>
+
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "18px",
+                fontWeight: 300,
+                lineHeight: 1.7,
+                color: "var(--color-text-muted)",
+                maxWidth: "560px",
+                marginBottom: "var(--sp-2)",
+              }}
+            >
+              A conversational AI built with the Claude API and Vercel AI SDK,
+              deployed on Next.js. Ask it anything about my work, skills, or
+              availability — it answers from a curated context window.
+            </p>
+
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "13px",
+                fontWeight: 500,
+                letterSpacing: "0.04em",
+                color: "var(--color-text)",
+              }}
+            >
+              Claude API · Vercel AI SDK · Next.js · TypeScript
+            </div>
+          </div>
+
+          {/* Live chat demo */}
+          <div
+            className="project-gallery-col"
+            style={{
+              flex: "1 1 45%",
+              minWidth: 0,
+              padding: "var(--sp-2) var(--sp-4)",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <InlineChat />
+          </div>
+        </div>
+
         {projects.map((project, i) => {
           const parts = project.subtitle.split("|");
           const dateRange = parts[0]?.trim() || "";
@@ -192,7 +309,7 @@ export default function Home() {
                 flexDirection: isReverse ? "row-reverse" : "row",
                 gap: "var(--sp-6)",
                 padding: "var(--sp-6) 0",
-                marginBottom: "var(--sp-6)",
+                marginBottom: "var(--sp-12)",
                 background: "var(--color-surface)",
                 borderRadius: "var(--r)",
                 borderTop: "2px solid var(--color-accent-gold)",
