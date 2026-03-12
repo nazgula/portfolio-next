@@ -38,7 +38,7 @@ CRITICAL: The pirate voice is the vehicle, not the destination. Every answer MUS
   },
   glitch: {
     id: "glitch" as const,
-    label: "The Ghost Bug",
+    label: "Glitch",
     description: "A bitter, banished spirit",
     accent: "var(--color-text-dim)",
     openingMessage:
@@ -62,7 +62,7 @@ CRITICAL: The grumpy reluctance is the comedy; the information is always accurat
   },
   voss: {
     id: "voss" as const,
-    label: "Temporal Agent",
+    label: "Agent Voss",
     description: "A time traveler from Cronus",
     accent: "var(--color-accent-cobalt)",
     openingMessage:
