@@ -66,6 +66,17 @@ export function ChatLightbox() {
     }
   }, [activePersona, contextMessages, setMessages]);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Focus input when lightbox opens
+  useEffect(() => {
+    if (isOpen) {
+      // Small delay to ensure the DOM is rendered after the fade animation starts
+      const timer = setTimeout(() => inputRef.current?.focus(), 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   // Close on Escape
   useEffect(() => {
     if (!isOpen) return;
@@ -261,6 +272,7 @@ export function ChatLightbox() {
           }}
         >
           <input
+            ref={inputRef}
             value={input}
             onChange={handleInputChange}
             placeholder="Ask about Maria's work..."
