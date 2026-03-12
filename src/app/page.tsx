@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { ChatWidget } from "@/components/chat-widget";
+import { ChatLightbox } from "@/components/chat-lightbox";
+import { ChatCardPreview } from "@/components/chat-card-preview";
+import { ChatProvider } from "@/lib/chatbot/chat-context";
 import { ProjectGallery } from "@/components/project-gallery";
 import { Lightbox } from "@/components/lightbox";
 import { DecoRule } from "@/components/deco-rule";
 import { Linkedin, Github } from "lucide-react";
-import { InlineChat } from "@/components/inline-chat";
 import type { GalleryImage } from "@/lib/types";
 import projects from "@/data/projects.json";
 
@@ -43,6 +45,7 @@ export default function Home() {
   };
 
   return (
+    <ChatProvider>
     <div style={{ background: "var(--color-bg)", color: "var(--color-text)" }}>
       {/* ── Hero ── */}
       <header
@@ -173,6 +176,7 @@ export default function Home() {
         >
         {/* ── Portfolio Assistant (AI project card) ── */}
         <div
+          id="portfolio-assistant-card"
           className="project-card animate-fade-up"
           style={{
             display: "flex",
@@ -281,7 +285,7 @@ export default function Home() {
               alignItems: "center",
             }}
           >
-            <InlineChat />
+            <ChatCardPreview />
           </div>
         </div>
 
@@ -584,8 +588,10 @@ export default function Home() {
         />
       )}
 
-      {/* Chat Widget */}
+      {/* Chat */}
       <ChatWidget />
+      <ChatLightbox />
     </div>
+    </ChatProvider>
   );
 }

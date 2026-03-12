@@ -224,6 +224,48 @@
   animation: chatPulse 2s var(--ease-in-out) 3;
 }
 
+@keyframes lightboxFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes chatFloat {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glitchFlicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-lightbox-fade {
+  animation: lightboxFade 220ms var(--ease-out);
+}
+
+.animate-chat-float {
+  animation: chatFloat var(--dur-std) var(--ease-out);
+}
+
+.animate-glitch-flicker {
+  animation: glitchFlicker 2s ease-in-out infinite;
+}
+
+/* ── Chat Lightbox Scrollbar ── */
+.chat-lightbox-messages::-webkit-scrollbar {
+  width: 3px;
+}
+.chat-lightbox-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-lightbox-messages::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+.chat-lightbox-messages::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-gold);
+}
+
 /* ── Sticky Nav ── */
 .sticky-nav {
   position: sticky;
