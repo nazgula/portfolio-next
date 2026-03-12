@@ -59,7 +59,6 @@ src/
     chat-lightbox.tsx     # Lightbox chat UI (NPC persona chatbot)
     chat-card-preview.tsx # Inline chat card on homepage
     chat-widget.tsx       # Floating chat button (IntersectionObserver toggle)
-    inline-chat.tsx       # Inline chat component
     persona-avatars.tsx   # NPC persona avatar components
     project-gallery.tsx   # Image carousel (16:10, dots nav)
     lightbox.tsx          # Fullscreen image viewer (keyboard nav)
@@ -69,9 +68,8 @@ src/
   data/
     projects.json         # Project entries (title, dates, role, stack, images)
   lib/
-    types.ts              # Shared TypeScript types
+    types.ts              # Shared TypeScript types (GalleryImage)
     utils.ts              # cn() — clsx + tailwind-merge
-    use-chat.ts           # Custom useChat hook (AI SDK v6)
     chatbot/
       chat-context.tsx    # React context for chatbot state
       knowledge-base.ts   # Portfolio data for persona responses
