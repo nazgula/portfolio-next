@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import { FileText } from "lucide-react";
 import { PersonaAvatar } from "./persona-avatars";
 import type { UIMessage } from "ai";
@@ -107,7 +108,13 @@ export function ChatMessageList({
                       }),
                 }}
               >
-                {textContent}
+                {isUser ? (
+                  textContent
+                ) : (
+                  <div className="chat-markdown">
+                    <ReactMarkdown>{textContent}</ReactMarkdown>
+                  </div>
+                )}
               </div>
             )}
 

@@ -324,6 +324,25 @@
     );
 }
 
+/* ── Chat Markdown ── */
+.chat-markdown p { margin: 0 0 0.4em; }
+.chat-markdown p:last-child { margin-bottom: 0; }
+.chat-markdown strong { font-weight: 500; }
+.chat-markdown ul, .chat-markdown ol { margin: 0.3em 0; padding-left: 1.4em; }
+.chat-markdown li { margin: 0.15em 0; }
+.chat-markdown code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-border);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+.chat-markdown a {
+  color: var(--color-accent-gold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .hero-section { padding: var(--sp-8) var(--sp-4) !important; }
