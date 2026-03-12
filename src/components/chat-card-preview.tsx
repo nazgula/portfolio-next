@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import { Send } from "lucide-react";
 import { useChatContext } from "@/lib/chatbot/chat-context";
 import { personas } from "@/lib/chatbot/personas";
 import { ChatMessageList } from "./chat-message-list";
@@ -107,6 +108,42 @@ export function ChatCardPreview() {
             </div>
           </>
         )}
+      </div>
+
+      {/* Fake input bar — visual only */}
+      <div
+        style={{
+          flexShrink: 0,
+          borderTop: "1px solid var(--color-border)",
+          padding: "12px 16px",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          background: "var(--color-bg)",
+          pointerEvents: "none",
+          opacity: 0.5,
+        }}
+      >
+        <div
+          style={{
+            flex: 1,
+            fontFamily: "var(--font-body)",
+            fontSize: "14px",
+            fontWeight: 300,
+            color: "var(--color-text-dim)",
+          }}
+        >
+          Ask about Maria&apos;s work...
+        </div>
+        <div
+          style={{
+            color: "var(--color-text-dim)",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Send size={16} />
+        </div>
       </div>
 
       {/* Click overlay — captures all clicks, opens lightbox */}
