@@ -18,12 +18,25 @@ Act as an AI development expert and fullstack developer.
   - **Why** it's needed right now
   - Example: "Running `npm run build` to verify the production build passes after the layout change."
 
+## Change Management
+- **Prefer local fixes over architectural changes.** If a small, scoped change solves the problem and follows good practice, do that. Don't restructure files, move responsibilities, or change patterns for a localized issue. Propose architectural changes only when the local fix would be genuinely bad practice — discuss before implementing.
+- **Never auto-install dependencies.** Before adding a package, explain: (a) what it does and why it's needed, (b) whether the task can be solved without it, and (c) why this library over alternatives. Wait for approval before running `npm install`.
+- **Don't reorganize, rename, or delete files** unless it's part of the requested change.
+- **Don't upgrade or swap dependencies unprompted.** Only touch versions when asked or when a bug specifically requires it.
+- **One concern per change.** Don't bundle "while I'm here" improvements with the requested fix. Mention other issues separately.
+- **Small, atomic commits.** One logical change per commit. For work spanning more than ~3 commits, create a branch and suggest commit points at logical milestones (e.g., "data layer works — good commit point before starting UI").
+- **Research before migrating.** Before upgrading a major dependency, read the migration guide / changelog first. Don't trial-and-error through breaking changes.
+- **Browser-test at meaningful checkpoints** — after a feature works end-to-end or after changing behavior / data flow. Not after every small tweak.
+- **Flag mock drift in tests.** When mocking a core integration (e.g., `useChat`), note what the mock doesn't cover and flag if real-format testing is needed.
+- **Stop and regroup after 2 failed approaches.** If two different attempts at solving a problem both fail, stop and summarize what was tried instead of continuing to debug. Ask whether to keep going or try a different direction.
+- **Flag when going in circles.** If hitting the same error twice or deep-diving into `node_modules`, pause, say so, and suggest a different approach.
+
 ## Tech Stack
 - **Framework:** Next.js 16 (App Router, React 19, TypeScript 5)
 - **Styling:** Tailwind CSS 4 + CSS custom properties (design tokens in `globals.css`)
 - **UI primitives:** Base UI React (unstyled), shadcn/ui v4, class-variance-authority
 - **Icons:** lucide-react
-- **AI:** Anthropic SDK → Claude Haiku (streaming chat via `/api/chat`)
+- **AI:** AI SDK v6 + Anthropic provider → Claude Haiku (streaming chat via `/api/chat`)
 - **Testing:** Jest 30 + React Testing Library
 - **Deploy:** Vercel
 
@@ -38,22 +51,33 @@ Act as an AI development expert and fullstack developer.
 ```
 src/
   app/
-    page.tsx          # Main page (client component) — hero, projects, footer
-    layout.tsx        # Root layout, Google Fonts (Cormorant Garamond, Jost, DM Mono)
-    globals.css       # Design tokens, animations, deco patterns
-    api/chat/route.ts # POST — streaming Claude Haiku endpoint
+    page.tsx              # Main page (client component) — hero, projects, footer
+    layout.tsx            # Root layout, Google Fonts (Cormorant Garamond, Jost, DM Mono)
+    globals.css           # Design tokens, animations, deco patterns
+    api/chat/route.ts     # POST — streaming Claude Haiku endpoint (AI SDK v6)
   components/
-    chat-widget.tsx   # Floating chat (SSE streaming)
-    project-gallery.tsx # Image carousel (16:10, dots nav)
-    lightbox.tsx      # Fullscreen image viewer (keyboard nav)
-    deco-rule.tsx     # Art deco diamond divider
-    ui/               # Base UI primitives (button, input)
-    __tests__/        # Component tests
+    chat-lightbox.tsx     # Lightbox chat UI (NPC persona chatbot)
+    chat-card-preview.tsx # Inline chat card on homepage
+    chat-widget.tsx       # Floating chat button (IntersectionObserver toggle)
+    inline-chat.tsx       # Inline chat component
+    persona-avatars.tsx   # NPC persona avatar components
+    project-gallery.tsx   # Image carousel (16:10, dots nav)
+    lightbox.tsx          # Fullscreen image viewer (keyboard nav)
+    deco-rule.tsx         # Art deco diamond divider
+    ui/                   # Base UI primitives (button, input)
+    __tests__/            # Component tests
   data/
-    projects.json     # Project entries (title, dates, role, stack, images)
+    projects.json         # Project entries (title, dates, role, stack, images)
   lib/
-    utils.ts          # cn() — clsx + tailwind-merge
-public/               # Static assets (project screenshots, hero image, icons)
+    types.ts              # Shared TypeScript types
+    utils.ts              # cn() — clsx + tailwind-merge
+    use-chat.ts           # Custom useChat hook (AI SDK v6)
+    chatbot/
+      chat-context.tsx    # React context for chatbot state
+      knowledge-base.ts   # Portfolio data for persona responses
+      personas.ts         # NPC persona definitions (4 personas)
+      system-prompt.ts    # System prompt templates for Claude Haiku
+public/                   # Static assets (project screenshots, hero image, icons)
 ```
 
 ## Design System
