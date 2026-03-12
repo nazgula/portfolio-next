@@ -38,9 +38,37 @@ export function ChatMessageList({
   return (
     <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: "inherit" }}>
       {messages.map((msg, i) => {
+        const isHandoff = msg.id?.startsWith("handoff-");
+
+        if (isHandoff) {
+          const text =
+            msg.parts
+              ?.filter((p) => p.type === "text")
+              .map((p) => (p as { type: "text"; text: string }).text)
+              .join("") || "";
+          return (
+            <div
+              key={msg.id}
+              data-testid="handoff-message"
+              style={{
+                textAlign: "center",
+                fontFamily: "var(--font-body)",
+                fontSize: "13px",
+                fontStyle: "italic",
+                color: "var(--color-text-dim)",
+                padding: "12px 0",
+                lineHeight: 1.6,
+                whiteSpace: "pre-line",
+              }}
+            >
+              {text}
+            </div>
+          );
+        }
+
         const isUser = msg.role === "user";
         const showPersonaLabel =
-          !isUser && (i === 0 || messages[i - 1]?.role === "user");
+          !isUser && (i === 0 || messages[i - 1]?.role === "user" || messages[i - 1]?.id?.startsWith("handoff-"));
 
         const textContent =
           msg.parts

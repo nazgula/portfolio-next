@@ -35,6 +35,21 @@ function makeOpeningMessage(personaId: PersonaId): UIMessage {
   };
 }
 
+function makeHandoffMessage(
+  fromId: PersonaId,
+  toId: PersonaId
+): UIMessage {
+  const from = personas[fromId];
+  const to = personas[toId];
+  return {
+    id: `handoff-${crypto.randomUUID()}`,
+    role: "assistant",
+    parts: [
+      { type: "text", text: `*${from.exitText}*\n\n*${to.entranceText}*` },
+    ],
+  };
+}
+
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<ChatState>({
     isOpen: false,
@@ -55,7 +70,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     setState((s) => ({
       ...s,
       activePersona: id,
-      messages: [makeOpeningMessage(id)],
+      messages: [...s.messages, makeHandoffMessage(s.activePersona, id)],
     }));
   }, []);
 

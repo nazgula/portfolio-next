@@ -36,7 +36,7 @@ export function ChatLightbox() {
     status,
     error,
   } = useChat({
-    id: `chat-${activePersona}`,
+    id: "chat",
     messages: contextMessages,
     transport,
     onFinish: () => markInteracted(),
@@ -58,7 +58,7 @@ export function ChatLightbox() {
     }
   }, [messages, setContextMessages]);
 
-  // When persona switches, reset useChat messages
+  // When persona switches, sync handoff message into useChat
   useEffect(() => {
     if (activePersona !== currentPersonaRef.current) {
       currentPersonaRef.current = activePersona;
