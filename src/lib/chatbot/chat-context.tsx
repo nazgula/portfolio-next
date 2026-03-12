@@ -29,7 +29,7 @@ const ChatContext = createContext<ChatContextValue | null>(null);
 
 function makeOpeningMessage(personaId: PersonaId): UIMessage {
   return {
-    id: "opening",
+    id: crypto.randomUUID(),
     role: "assistant",
     parts: [{ type: "text", text: personas[personaId].openingMessage }],
   };

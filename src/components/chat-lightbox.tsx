@@ -3,7 +3,7 @@
 import { useEffect, useRef, useCallback, useState, useMemo, type ChangeEvent } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { Send, X } from "lucide-react";
+import { Send, X, RotateCcw } from "lucide-react";
 import { useChatContext } from "@/lib/chatbot/chat-context";
 import { personas, type PersonaId } from "@/lib/chatbot/personas";
 import { PersonaAvatar } from "./persona-avatars";
@@ -34,6 +34,7 @@ export function ChatLightbox() {
     sendMessage,
     setMessages,
     status,
+    error,
   } = useChat({
     id: `chat-${activePersona}`,
     messages: contextMessages,
@@ -98,6 +99,23 @@ export function ChatLightbox() {
     },
     [activePersona, switchPersona]
   );
+
+  const handleRetry = useCallback(() => {
+    const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
+    if (!lastUserMsg) return;
+    const text =
+      lastUserMsg.parts
+        ?.filter((p) => p.type === "text")
+        .map((p) => (p as { type: "text"; text: string }).text)
+        .join("") || "";
+    if (text) {
+      // Remove the failed assistant response (last message if it's assistant)
+      if (messages[messages.length - 1]?.role === "assistant") {
+        setMessages(messages.slice(0, -1));
+      }
+      sendMessage({ text });
+    }
+  }, [messages, sendMessage, setMessages]);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -241,11 +259,10 @@ export function ChatLightbox() {
           style={{
             flex: 1,
             minHeight: 0,
-            overflowY: "scroll",
+            overflowY: "auto",
             padding: "24px",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-end",
             gap: "16px",
             scrollbarWidth: "thin",
             scrollbarColor: "var(--color-border) transparent",
@@ -258,6 +275,44 @@ export function ChatLightbox() {
             isLoading={isLoading}
           />
         </div>
+
+        {/* Error banner */}
+        {error && (
+          <div
+            style={{
+              flexShrink: 0,
+              padding: "8px 16px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              background: "rgba(220, 38, 38, 0.08)",
+              borderTop: "1px solid rgba(220, 38, 38, 0.2)",
+              fontFamily: "var(--font-body)",
+              fontSize: "13px",
+              color: "var(--color-text-muted)",
+            }}
+          >
+            <span>Something went wrong. Try again?</span>
+            <button
+              onClick={handleRetry}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+                background: "none",
+                border: "none",
+                color: "var(--color-accent-gold)",
+                cursor: "pointer",
+                fontFamily: "var(--font-body)",
+                fontSize: "13px",
+                fontWeight: 500,
+              }}
+            >
+              <RotateCcw size={12} />
+              Retry
+            </button>
+          </div>
+        )}
 
         {/* Row 3: Input */}
         <form

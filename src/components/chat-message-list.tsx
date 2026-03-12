@@ -36,7 +36,7 @@ export function ChatMessageList({
   }, [messages, autoScroll]);
 
   return (
-    <>
+    <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: "inherit" }}>
       {messages.map((msg, i) => {
         const isUser = msg.role === "user";
         const showPersonaLabel =
@@ -270,11 +270,13 @@ export function ChatMessageList({
               borderLeft: `2px solid ${persona.accent}`,
             }}
           >
-            Thinking...
+            <span className="thinking-dots" aria-label="Thinking">
+              <span>.</span><span>.</span><span>.</span>
+            </span>
           </div>
         )}
 
       <div ref={messagesEndRef} data-testid="messages-end" />
-    </>
+    </div>
   );
 }

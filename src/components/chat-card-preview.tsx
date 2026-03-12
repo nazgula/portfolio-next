@@ -26,10 +26,10 @@ export function ChatCardPreview() {
       style={{
         position: "relative",
         width: "100%",
-        aspectRatio: "16 / 10",
+        aspectRatio: "16 / 9",
         borderRadius: "var(--r)",
         overflow: "hidden",
-        background: "var(--color-surface)",
+        background: "var(--color-bg)",
         border: "1px solid var(--color-border)",
         display: "flex",
         flexDirection: "column",
