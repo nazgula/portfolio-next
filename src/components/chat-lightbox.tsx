@@ -245,6 +245,7 @@ export function ChatLightbox() {
             padding: "24px",
             display: "flex",
             flexDirection: "column",
+            justifyContent: "flex-end",
             gap: "16px",
             scrollbarWidth: "thin",
             scrollbarColor: "var(--color-border) transparent",

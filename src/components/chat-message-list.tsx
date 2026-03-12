@@ -95,8 +95,8 @@ export function ChatMessageList({
                     ? {
                         alignSelf: "flex-end",
                         marginLeft: "auto",
-                        background: "var(--color-bg-deep)",
-                        color: "var(--color-text-inv)",
+                        background: "rgba(201, 168, 76, 0.15)",
+                        color: "var(--color-text)",
                       }
                     : {
                         alignSelf: "flex-start",

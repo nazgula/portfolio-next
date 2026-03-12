@@ -1,18 +1,9 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { Send } from "lucide-react";
 import { useChatContext } from "@/lib/chatbot/chat-context";
-import { personas, type PersonaId } from "@/lib/chatbot/personas";
-import { PersonaAvatar } from "./persona-avatars";
+import { personas } from "@/lib/chatbot/personas";
 import { ChatMessageList } from "./chat-message-list";
-
-const personaIntros: { id: PersonaId; emoji: string; tagline: string }[] = [
-  { id: "archivist", emoji: "📜", tagline: "Professional guide" },
-  { id: "barnaby", emoji: "🏴‍☠️", tagline: "Old pirate friend" },
-  { id: "glitch", emoji: "👻", tagline: "Bitter banished spirit" },
-  { id: "voss", emoji: "🕰️", tagline: "Time traveler from Cronus" },
-];
 
 export function ChatCardPreview() {
   const { hasInteracted, activePersona, messages, openChat } =
@@ -41,6 +32,7 @@ export function ChatCardPreview() {
         border: "1px solid var(--color-border)",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "flex-end",
         boxShadow: "var(--shadow-card)",
         transition: "box-shadow var(--dur-std) var(--ease-out)",
       }}
@@ -61,6 +53,7 @@ export function ChatCardPreview() {
           padding: "16px",
           display: "flex",
           flexDirection: "column",
+          justifyContent: "flex-end",
           gap: "12px",
         }}
       >
@@ -73,62 +66,27 @@ export function ChatCardPreview() {
           />
         ) : (
           <>
-            {/* Assistant bubble: persona introductions */}
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  marginBottom: "4px",
-                }}
-              >
-                <PersonaAvatar personaId="archivist" size={14} />
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "10px",
-                    color: "var(--color-accent-gold)",
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {personas.archivist.label}
-                </span>
-              </div>
-              <div
-                style={{
-                  maxWidth: "85%",
-                  width: "fit-content",
-                  borderRadius: "4px",
-                  padding: "10px 14px",
-                  fontSize: "13px",
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 300,
-                  lineHeight: 1.8,
-                  background: "var(--color-tag-bg)",
-                  color: "var(--color-text)",
-                  borderLeft: "2px solid var(--color-accent-gold)",
-                }}
-              >
-                {personaIntros.map(({ id, emoji, tagline }) => (
-                  <div
-                    key={id}
-                    style={{ display: "flex", alignItems: "center", gap: "8px" }}
-                  >
-                    <span>{emoji}</span>
-                    <span>
-                      <strong style={{ fontWeight: 500 }}>
-                        {personas[id].label}
-                      </strong>{" "}
-                      — {tagline}
-                    </span>
-                  </div>
-                ))}
-              </div>
+            {/* Assistant bubble */}
+            <div
+              style={{
+                maxWidth: "85%",
+                width: "fit-content",
+                borderRadius: "4px",
+                padding: "10px 14px",
+                fontSize: "13px",
+                fontFamily: "var(--font-body)",
+                fontWeight: 300,
+                lineHeight: 1.6,
+                background: "var(--color-tag-bg)",
+                color: "var(--color-text)",
+                borderLeft: "2px solid var(--color-accent-gold)",
+              }}
+            >
+              I&apos;m the Archivist. Ask me about Maria&apos;s work — or pick
+              a guide: ⚓ Saltwood · 👾 Glitch · 🕐 Voss
             </div>
 
-            {/* User bubble: CTA */}
+            {/* User bubble */}
             <div
               style={{
                 maxWidth: "70%",
@@ -141,49 +99,14 @@ export function ChatCardPreview() {
                 lineHeight: 1.5,
                 alignSelf: "flex-end",
                 marginLeft: "auto",
-                background: "var(--color-bg-deep)",
-                color: "var(--color-text-inv)",
+                background: "rgba(201, 168, 76, 0.15)",
+                color: "var(--color-text)",
               }}
             >
               Choose your guide. Ask anything.
             </div>
           </>
         )}
-      </div>
-
-      {/* Fake input bar */}
-      <div
-        style={{
-          flexShrink: 0,
-          borderTop: "1px solid var(--color-border)",
-          padding: "12px 16px",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          background: "var(--color-bg)",
-        }}
-      >
-        <div
-          style={{
-            flex: 1,
-            fontFamily: "var(--font-body)",
-            fontSize: "14px",
-            fontWeight: 300,
-            color: "var(--color-text-dim)",
-          }}
-        >
-          Ask about Maria&apos;s work...
-        </div>
-        <div
-          style={{
-            color: "var(--color-text-dim)",
-            display: "flex",
-            alignItems: "center",
-            opacity: 0.4,
-          }}
-        >
-          <Send size={16} />
-        </div>
       </div>
 
       {/* Click overlay — captures all clicks, opens lightbox */}
