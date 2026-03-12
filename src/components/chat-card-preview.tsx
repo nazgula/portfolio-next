@@ -1,160 +1,170 @@
 "use client";
 
+import { useRef, useEffect } from "react";
+import { Send } from "lucide-react";
 import { useChatContext } from "@/lib/chatbot/chat-context";
-import { personas, type PersonaId } from "@/lib/chatbot/personas";
-import { PersonaAvatar } from "./persona-avatars";
+import { personas } from "@/lib/chatbot/personas";
+import { ChatMessageList } from "./chat-message-list";
 
 export function ChatCardPreview() {
   const { hasInteracted, activePersona, messages, openChat } =
     useChatContext();
 
-  if (hasInteracted) {
-    const lastMsg = [...messages].reverse().find((m) => m.role === "assistant");
-    const lastMsgText = lastMsg?.parts
-      ?.filter((p) => p.type === "text")
-      .map((p) => (p as { type: "text"; text: string }).text)
-      .join("") || "";
-    const persona = personas[activePersona];
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-    return (
-      <div
-        onClick={openChat}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-          padding: "24px",
-          cursor: "pointer",
-          border: "1px solid var(--color-border)",
-          borderRadius: "var(--r)",
-          transition: "border-color var(--dur-std) var(--ease-out)",
-        }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.borderColor = "var(--color-accent-gold)")
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.borderColor = "var(--color-border)")
-        }
-      >
-        <PersonaAvatar personaId={activePersona} size={32} />
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "11px",
-            color: "var(--color-text-muted)",
-            marginTop: "8px",
-          }}
-        >
-          {persona.label}
-        </span>
-        {lastMsgText && (
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "13px",
-              fontWeight: 300,
-              color: "var(--color-text-dim)",
-              maxWidth: "100%",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              marginTop: "8px",
-              textAlign: "center",
-            }}
-          >
-            {lastMsgText}
-          </span>
-        )}
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "11px",
-            color: "var(--color-accent-gold)",
-            marginTop: "8px",
-          }}
-        >
-          Continue conversation →
-        </span>
-      </div>
-    );
-  }
+  // Auto-scroll to bottom when messages update (post-interaction)
+  useEffect(() => {
+    if (hasInteracted && scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, hasInteracted]);
+
+  const persona = personas[activePersona];
 
   return (
     <div
-      onClick={openChat}
       style={{
+        position: "relative",
+        width: "100%",
+        aspectRatio: "16 / 10",
+        borderRadius: "var(--r)",
+        overflow: "hidden",
+        background: "var(--color-surface)",
+        border: "1px solid var(--color-border)",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-        padding: "16px",
-        cursor: "pointer",
-        border: "1px solid var(--color-border)",
-        borderRadius: "var(--r)",
-        transition: "border-color var(--dur-std) var(--ease-out)",
+        justifyContent: "flex-end",
+        boxShadow: "var(--shadow-card)",
+        transition: "box-shadow var(--dur-std) var(--ease-out)",
       }}
       onMouseEnter={(e) =>
-        (e.currentTarget.style.borderColor = "var(--color-accent-gold)")
+        (e.currentTarget.style.boxShadow = "var(--shadow-lift)")
       }
       onMouseLeave={(e) =>
-        (e.currentTarget.style.borderColor = "var(--color-border)")
+        (e.currentTarget.style.boxShadow = "var(--shadow-card)")
       }
     >
-      {/* 2×2 persona grid */}
+      {/* Messages area */}
       <div
+        ref={scrollRef}
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "8px",
-          width: "100%",
-          maxWidth: "240px",
+          flex: 1,
+          minHeight: 0,
+          overflowY: "hidden",
+          padding: "16px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          gap: "12px",
         }}
       >
-        {(Object.keys(personas) as PersonaId[]).map((id) => {
-          const p = personas[id];
-          return (
+        {hasInteracted ? (
+          <ChatMessageList
+            messages={messages}
+            persona={persona}
+            personaId={activePersona}
+            autoScroll={false}
+          />
+        ) : (
+          <>
+            {/* Assistant bubble */}
             <div
-              key={id}
               style={{
-                background: "var(--color-bg)",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--r)",
-                padding: "12px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "6px",
+                maxWidth: "85%",
+                width: "fit-content",
+                borderRadius: "4px",
+                padding: "10px 14px",
+                fontSize: "13px",
+                fontFamily: "var(--font-body)",
+                fontWeight: 300,
+                lineHeight: 1.6,
+                background: "var(--color-tag-bg)",
+                color: "var(--color-text)",
+                borderLeft: "2px solid var(--color-accent-gold)",
               }}
             >
-              <PersonaAvatar personaId={id} size={32} />
-              <span
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "11px",
-                  color: "var(--color-text-muted)",
-                  textAlign: "center",
-                }}
-              >
-                {p.label}
-              </span>
+              I&apos;m the Archivist. Ask me about Maria&apos;s work — or pick
+              a guide: ⚓ Saltwood · 👾 Glitch · 🕐 Voss
             </div>
-          );
-        })}
+
+            {/* User bubble */}
+            <div
+              style={{
+                maxWidth: "70%",
+                width: "fit-content",
+                borderRadius: "4px",
+                padding: "10px 14px",
+                fontSize: "13px",
+                fontFamily: "var(--font-body)",
+                fontWeight: 300,
+                lineHeight: 1.5,
+                alignSelf: "flex-end",
+                marginLeft: "auto",
+                background: "rgba(201, 168, 76, 0.15)",
+                color: "var(--color-text)",
+              }}
+            >
+              Choose your guide. Ask anything.
+            </div>
+          </>
+        )}
       </div>
 
-      <span
+      {/* Fake input bar — visual only */}
+      <div
         style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "11px",
-          color: "var(--color-text-dim)",
-          marginTop: "12px",
+          flexShrink: 0,
+          borderTop: "1px solid var(--color-border)",
+          padding: "12px 16px",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          background: "var(--color-bg)",
+          pointerEvents: "none",
+          opacity: 0.5,
         }}
       >
-        Choose your guide. Ask anything.
-      </span>
+        <div
+          style={{
+            flex: 1,
+            fontFamily: "var(--font-body)",
+            fontSize: "14px",
+            fontWeight: 300,
+            color: "var(--color-text-dim)",
+          }}
+        >
+          Ask about Maria&apos;s work...
+        </div>
+        <div
+          style={{
+            color: "var(--color-text-dim)",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Send size={16} />
+        </div>
+      </div>
+
+      {/* Click overlay — captures all clicks, opens lightbox */}
+      <div
+        onClick={openChat}
+        style={{
+          position: "absolute",
+          inset: 0,
+          cursor: "pointer",
+          zIndex: 1,
+        }}
+        aria-label="Open chat"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openChat();
+          }
+        }}
+      />
     </div>
   );
 }
