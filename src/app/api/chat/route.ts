@@ -7,6 +7,7 @@ import {
   type PersonaId,
 } from "@/lib/chatbot/personas";
 import { buildSystemPrompt } from "@/lib/chatbot/system-prompt";
+import { logChatCall } from "@/lib/chatbot/chat-logger";
 
 const anthropic = createAnthropic();
 
@@ -24,6 +25,8 @@ export async function POST(req: Request) {
     const activePersona =
       personas[personaId as PersonaId] || personas[defaultPersona];
     const systemPrompt = buildSystemPrompt(activePersona);
+
+    logChatCall(personaId as string, systemPrompt, messages);
 
     const modelMessages = await convertToModelMessages(messages);
 
