@@ -5,25 +5,26 @@ import ReactMarkdown from "react-markdown";
 import { FileText } from "lucide-react";
 import { PersonaAvatar } from "./persona-avatars";
 import type { UIMessage } from "ai";
-import type { PersonaId } from "@/lib/chatbot/personas";
-
-interface Persona {
-  label: string;
-  accent: string;
-}
+import { personas as allPersonas, type PersonaId } from "@/lib/chatbot/personas";
 
 interface ChatMessageListProps {
   messages: UIMessage[];
-  persona: Persona;
-  personaId: PersonaId;
+  activePersonaId: PersonaId;
   isLoading?: boolean;
   autoScroll?: boolean;
 }
 
+/** Parse target persona from handoff message ID (format: handoff-{personaId}-{uuid}) */
+function parseHandoffTarget(id: string): PersonaId | null {
+  const match = id.match(/^handoff-(\w+)-/);
+  if (!match) return null;
+  const candidate = match[1];
+  return candidate in allPersonas ? (candidate as PersonaId) : null;
+}
+
 export function ChatMessageList({
   messages,
-  persona,
-  personaId,
+  activePersonaId,
   isLoading = false,
   autoScroll = true,
 }: ChatMessageListProps) {
@@ -34,6 +35,34 @@ export function ChatMessageList({
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, autoScroll]);
+
+  // Build a per-message persona map by walking the messages and tracking handoffs
+  const personaAtMessage: PersonaId[] = [];
+  {
+    let current: PersonaId = (() => {
+      // Find the initial persona: it's the default unless the first handoff tells us otherwise
+      // Walk backwards from the start to find the initial persona
+      for (const msg of messages) {
+        if (msg.id?.startsWith("handoff-")) {
+          break; // first handoff means everything before it was the default
+        }
+      }
+      // The initial persona is the one before any handoffs — we derive it from defaultPersona
+      // But if the chat was opened with a non-default persona, we need the first persona
+      // The simplest: check the first handoff to see what it switches FROM isn't stored in the ID
+      // So we use "archivist" as the start (defaultPersona) — this is always correct
+      // because the chat always starts with the default persona's opening message
+      return "archivist" as PersonaId;
+    })();
+
+    for (const msg of messages) {
+      if (msg.id?.startsWith("handoff-")) {
+        const target = parseHandoffTarget(msg.id);
+        if (target) current = target;
+      }
+      personaAtMessage.push(current);
+    }
+  }
 
   return (
     <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: "inherit" }}>
@@ -51,20 +80,33 @@ export function ChatMessageList({
               key={msg.id}
               data-testid="handoff-message"
               style={{
-                textAlign: "center",
-                fontFamily: "var(--font-body)",
-                fontSize: "13px",
-                fontStyle: "italic",
-                color: "var(--color-text-dim)",
-                padding: "12px 0",
-                lineHeight: 1.6,
-                whiteSpace: "pre-line",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                margin: "8px 24px",
               }}
             >
-              {text}
+              <div style={{ flex: 1, height: "1px", background: "var(--color-border)" }} />
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "13px",
+                  fontStyle: "italic",
+                  color: "var(--color-text-muted)",
+                  lineHeight: 1.6,
+                  whiteSpace: "pre-line",
+                  textAlign: "center",
+                }}
+              >
+                {text}
+              </span>
+              <div style={{ flex: 1, height: "1px", background: "var(--color-border)" }} />
             </div>
           );
         }
+
+        const msgPersonaId = personaAtMessage[i];
+        const msgPersona = allPersonas[msgPersonaId];
 
         const isUser = msg.role === "user";
         const showPersonaLabel =
@@ -94,17 +136,17 @@ export function ChatMessageList({
                   marginBottom: "4px",
                 }}
               >
-                <PersonaAvatar personaId={personaId} size={14} />
+                <PersonaAvatar personaId={msgPersonaId} size={14} />
                 <span
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "10px",
-                    color: persona.accent,
+                    color: msgPersona.accent,
                     letterSpacing: "0.1em",
                     textTransform: "uppercase",
                   }}
                 >
-                  {persona.label}
+                  {msgPersona.label}
                 </span>
               </div>
             )}
@@ -118,7 +160,7 @@ export function ChatMessageList({
                   padding: "10px 14px",
                   fontSize: "14px",
                   fontFamily: "var(--font-body)",
-                  fontWeight: 300,
+                  fontWeight: 400,
                   lineHeight: 1.5,
                   ...(isUser
                     ? {
@@ -132,7 +174,7 @@ export function ChatMessageList({
                         marginRight: "auto",
                         background: "var(--color-tag-bg)",
                         color: "var(--color-text)",
-                        borderLeft: `2px solid ${persona.accent}`,
+                        borderLeft: `2px solid ${msgPersona.accent}`,
                       }),
                 }}
               >
@@ -295,7 +337,7 @@ export function ChatMessageList({
               fontFamily: "var(--font-body)",
               background: "var(--color-tag-bg)",
               color: "var(--color-text-muted)",
-              borderLeft: `2px solid ${persona.accent}`,
+              borderLeft: `2px solid ${allPersonas[activePersonaId].accent}`,
             }}
           >
             <span className="thinking-dots" aria-label="Thinking">

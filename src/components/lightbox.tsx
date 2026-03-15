@@ -136,7 +136,7 @@ export function Lightbox({ imgDir, images, index, onClose, onNav }: LightboxProp
             textAlign: "center",
             fontSize: "14px",
             fontFamily: "var(--font-body)",
-            fontWeight: 300,
+            fontWeight: 400,
             color: "rgba(245, 240, 232, 0.85)",
           }}
         >

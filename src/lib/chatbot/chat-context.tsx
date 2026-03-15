@@ -42,7 +42,7 @@ function makeHandoffMessage(
   const from = personas[fromId];
   const to = personas[toId];
   return {
-    id: `handoff-${crypto.randomUUID()}`,
+    id: `handoff-${toId}-${crypto.randomUUID()}`,
     role: "assistant",
     parts: [
       { type: "text", text: `*${from.exitText}*\n\n*${to.entranceText}*` },

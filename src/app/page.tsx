@@ -249,7 +249,7 @@ export default function Home() {
               style={{
                 fontFamily: "var(--font-body)",
                 fontSize: "18px",
-                fontWeight: 300,
+                fontWeight: 400,
                 lineHeight: 1.7,
                 color: "var(--color-text-muted)",
                 maxWidth: "560px",
@@ -376,7 +376,7 @@ export default function Home() {
                   style={{
                     fontFamily: "var(--font-body)",
                     fontSize: "18px",
-                    fontWeight: 300,
+                    fontWeight: 400,
                     lineHeight: 1.7,
                     color: "var(--color-text-muted)",
                     maxWidth: "560px",

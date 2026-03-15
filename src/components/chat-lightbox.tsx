@@ -25,8 +25,8 @@ export function ChatLightbox() {
   const [input, setInput] = useState("");
 
   const transport = useMemo(
-    () => new DefaultChatTransport({ body: { persona: activePersona } }),
-    [activePersona]
+    () => new DefaultChatTransport({}),
+    []
   );
 
   const {
@@ -113,23 +113,22 @@ export function ChatLightbox() {
       if (messages[messages.length - 1]?.role === "assistant") {
         setMessages(messages.slice(0, -1));
       }
-      sendMessage({ text });
+      sendMessage({ text }, { body: { persona: activePersona } });
     }
-  }, [messages, sendMessage, setMessages]);
+  }, [messages, sendMessage, setMessages, activePersona]);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
       if (!input.trim() || status === "streaming") return;
-      sendMessage({ text: input });
+      sendMessage({ text: input }, { body: { persona: activePersona } });
       setInput("");
     },
-    [input, status, sendMessage]
+    [input, status, sendMessage, activePersona]
   );
 
   if (!isOpen) return null;
 
-  const persona = personas[activePersona];
   const isLoading = status === "streaming";
 
   return (
@@ -270,8 +269,7 @@ export function ChatLightbox() {
         >
           <ChatMessageList
             messages={messages}
-            persona={persona}
-            personaId={activePersona}
+            activePersonaId={activePersona}
             isLoading={isLoading}
           />
         </div>
@@ -340,7 +338,7 @@ export function ChatLightbox() {
               outline: "none",
               fontFamily: "var(--font-body)",
               fontSize: "14px",
-              fontWeight: 300,
+              fontWeight: 400,
               color: "var(--color-text)",
             }}
           />

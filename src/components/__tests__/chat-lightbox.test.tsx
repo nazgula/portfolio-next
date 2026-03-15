@@ -155,7 +155,10 @@ describe("ChatLightbox", () => {
 
     await user.click(screen.getByLabelText("Send message"));
 
-    expect(mockSendMessage).toHaveBeenCalledWith({ text: "Who is Maria?" });
+    expect(mockSendMessage).toHaveBeenCalledWith(
+      { text: "Who is Maria?" },
+      { body: { persona: "archivist" } }
+    );
     expect(input).toHaveValue("");
   });
 

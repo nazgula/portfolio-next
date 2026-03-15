@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import { Send } from "lucide-react";
 import { useChatContext } from "@/lib/chatbot/chat-context";
-import { personas } from "@/lib/chatbot/personas";
 import { ChatMessageList } from "./chat-message-list";
 
 export function ChatCardPreview() {
@@ -18,8 +17,6 @@ export function ChatCardPreview() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, hasInteracted]);
-
-  const persona = personas[activePersona];
 
   return (
     <div
@@ -61,8 +58,7 @@ export function ChatCardPreview() {
         {hasInteracted ? (
           <ChatMessageList
             messages={messages}
-            persona={persona}
-            personaId={activePersona}
+            activePersonaId={activePersona}
             autoScroll={false}
           />
         ) : (
@@ -76,7 +72,7 @@ export function ChatCardPreview() {
                 padding: "10px 14px",
                 fontSize: "13px",
                 fontFamily: "var(--font-body)",
-                fontWeight: 300,
+                fontWeight: 400,
                 lineHeight: 1.6,
                 background: "var(--color-tag-bg)",
                 color: "var(--color-text)",
@@ -96,7 +92,7 @@ export function ChatCardPreview() {
                 padding: "10px 14px",
                 fontSize: "13px",
                 fontFamily: "var(--font-body)",
-                fontWeight: 300,
+                fontWeight: 400,
                 lineHeight: 1.5,
                 alignSelf: "flex-end",
                 marginLeft: "auto",
@@ -129,7 +125,7 @@ export function ChatCardPreview() {
             flex: 1,
             fontFamily: "var(--font-body)",
             fontSize: "14px",
-            fontWeight: 300,
+            fontWeight: 400,
             color: "var(--color-text-dim)",
           }}
         >
