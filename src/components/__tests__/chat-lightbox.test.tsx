@@ -99,9 +99,9 @@ describe("ChatLightbox", () => {
     const userBubble = screen.getByTestId("message-user");
     expect(userBubble).toHaveTextContent("Who is Maria?");
 
-    // User bubble should be right-aligned (marginLeft: auto)
+    // User bubble should be right-aligned (ml-auto class)
     const userTextDiv = userBubble.querySelector("div");
-    expect(userTextDiv).toHaveStyle({ marginLeft: "auto" });
+    expect(userTextDiv?.className).toContain("ml-auto");
   });
 
   it("shows persona label only on the first assistant message in a group", () => {

@@ -6,8 +6,15 @@ import { DefaultChatTransport } from "ai";
 import { Send, X, RotateCcw } from "lucide-react";
 import { useChatContext } from "@/lib/chatbot/chat-context";
 import { personas, type PersonaId } from "@/lib/chatbot/personas";
+import { cn } from "@/lib/utils";
 import { PersonaAvatar } from "./persona-avatars";
 import { ChatMessageList } from "./chat-message-list";
+
+const STARTER_QUESTIONS = [
+  "What's her tech stack?",
+  "Tell me about her latest role",
+  "What makes her different?",
+];
 
 export function ChatLightbox() {
   const {
@@ -67,22 +74,40 @@ export function ChatLightbox() {
     }
   }, [activePersona, contextMessages, setMessages]);
 
+  const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Focus input when lightbox opens
   useEffect(() => {
     if (isOpen) {
-      // Small delay to ensure the DOM is rendered after the fade animation starts
       const timer = setTimeout(() => inputRef.current?.focus(), 50);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
 
-  // Close on Escape
+  // Close on Escape + focus trap
   useEffect(() => {
     if (!isOpen) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeChat();
+      if (e.key === "Escape") {
+        closeChat();
+        return;
+      }
+      if (e.key === "Tab" && panelRef.current) {
+        const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     document.addEventListener("keydown", handleKey);
     document.body.style.overflow = "hidden";
@@ -109,7 +134,6 @@ export function ChatLightbox() {
         .map((p) => (p as { type: "text"; text: string }).text)
         .join("") || "";
     if (text) {
-      // Remove the failed assistant response (last message if it's assistant)
       if (messages[messages.length - 1]?.role === "assistant") {
         setMessages(messages.slice(0, -1));
       }
@@ -133,73 +157,25 @@ export function ChatLightbox() {
 
   return (
     <div
-      className="animate-lightbox-fade"
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(15, 17, 23, 0.94)",
-        backdropFilter: "blur(12px)",
-        zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className="animate-lightbox-fade fixed inset-0 z-[1000] flex items-center justify-center bg-[rgba(15,17,23,0.94)] backdrop-blur-[12px]"
       onClick={(e) => e.target === e.currentTarget && closeChat()}
     >
       {/* Panel */}
       <div
-        style={{
-          position: "relative",
-          background: "var(--color-surface)",
-          border: "1px solid var(--color-border)",
-          borderRadius: "var(--r-lg)",
-          width: "min(760px, 90vw)",
-          height: "min(600px, 85vh)",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          boxShadow: "var(--shadow-dark)",
-        }}
+        ref={panelRef}
+        className="relative flex flex-col overflow-hidden border border-[var(--color-border)] rounded-[var(--r-lg)] shadow-[var(--shadow-dark)] bg-[var(--color-surface)] w-[min(760px,90vw)] h-[min(600px,85vh)]"
       >
         {/* Close button */}
         <button
           onClick={closeChat}
           aria-label="Close chat"
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "16px",
-            zIndex: 10,
-            background: "none",
-            border: "none",
-            color: "var(--color-text-dim)",
-            cursor: "pointer",
-            padding: "4px",
-            transition: "color var(--dur-fast) var(--ease-out)",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.color = "var(--color-text)")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.color = "var(--color-text-dim)")
-          }
+          className="absolute top-4 right-4 z-10 bg-transparent border-none p-1 cursor-pointer text-[var(--color-text-dim)] transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-[var(--color-text)]"
         >
           <X size={18} />
         </button>
 
         {/* Row 1: Persona selector bar */}
-        <div
-          style={{
-            height: "72px",
-            borderBottom: "1px solid var(--color-border)",
-            background: "var(--color-bg)",
-            display: "flex",
-            alignItems: "center",
-            padding: "0 24px",
-            gap: "8px",
-            flexShrink: 0,
-          }}
-        >
+        <div className="h-[72px] shrink-0 flex items-center gap-2 px-6 border-b border-[var(--color-border)] bg-[var(--color-bg)]">
           {(Object.keys(personas) as PersonaId[]).map((id) => {
             const p = personas[id];
             const isActive = id === activePersona;
@@ -207,43 +183,24 @@ export function ChatLightbox() {
               <button
                 key={id}
                 onClick={() => handlePersonaSwitch(id)}
+                className={cn(
+                  "flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] border cursor-pointer transition-all duration-[var(--dur-fast)] ease-[var(--ease-out)]",
+                  isActive
+                    ? "bg-[var(--color-tag-bg)]"
+                    : "bg-transparent hover:bg-[var(--color-surface)] hover:border-[var(--color-border-dark)]"
+                )}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "6px 14px",
-                  borderRadius: "var(--r-pill)",
-                  border: `1px solid ${
-                    isActive ? p.accent : "var(--color-border)"
-                  }`,
-                  background: isActive ? "var(--color-tag-bg)" : "transparent",
-                  cursor: "pointer",
-                  transition: "all var(--dur-fast) var(--ease-out)",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.borderColor =
-                      "var(--color-border-dark)";
-                    e.currentTarget.style.background = "var(--color-surface)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.borderColor = "var(--color-border)";
-                    e.currentTarget.style.background = "transparent";
-                  }
+                  borderColor: isActive ? p.accent : "var(--color-border)",
                 }}
               >
                 <PersonaAvatar personaId={id} size={20} />
                 <span
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "12px",
-                    fontWeight: 500,
-                    color: isActive
-                      ? "var(--color-text)"
-                      : "var(--color-text-muted)",
-                  }}
+                  className={cn(
+                    "font-sans text-xs font-medium",
+                    isActive
+                      ? "text-[var(--color-text)]"
+                      : "text-[var(--color-text-muted)]"
+                  )}
                 >
                   {p.label}
                 </span>
@@ -253,58 +210,38 @@ export function ChatLightbox() {
         </div>
 
         {/* Row 2: Messages */}
-        <div
-          className="chat-lightbox-messages"
-          style={{
-            flex: 1,
-            minHeight: 0,
-            overflowY: "auto",
-            padding: "24px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "16px",
-            scrollbarWidth: "thin",
-            scrollbarColor: "var(--color-border) transparent",
-          }}
-        >
+        <div className="chat-lightbox-messages flex-1 min-h-0 overflow-y-auto flex flex-col gap-4 p-6 scrollbar-thin scrollbar-[var(--color-border)]">
           <ChatMessageList
             messages={messages}
             activePersonaId={activePersona}
             isLoading={isLoading}
           />
+
+          {/* Starter question chips */}
+          {messages.length === 1 && messages[0]?.role === "assistant" && (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {STARTER_QUESTIONS.map((q) => (
+                <button
+                  key={q}
+                  onClick={() => {
+                    sendMessage({ text: q }, { body: { persona: activePersona } });
+                  }}
+                  className="px-3.5 py-1.5 rounded-[var(--r-pill)] border border-[var(--color-border)] bg-transparent font-sans text-[13px] font-normal text-[var(--color-text-muted)] cursor-pointer transition-all duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[var(--color-accent-gold)] hover:text-[var(--color-text)]"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Error banner */}
         {error && (
-          <div
-            style={{
-              flexShrink: 0,
-              padding: "8px 16px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              background: "rgba(220, 38, 38, 0.08)",
-              borderTop: "1px solid rgba(220, 38, 38, 0.2)",
-              fontFamily: "var(--font-body)",
-              fontSize: "13px",
-              color: "var(--color-text-muted)",
-            }}
-          >
+          <div className="shrink-0 flex items-center justify-between px-4 py-2 font-sans text-[13px] text-[var(--color-text-muted)] bg-[rgba(220,38,38,0.08)] border-t border-[rgba(220,38,38,0.2)]">
             <span>Something went wrong. Try again?</span>
             <button
               onClick={handleRetry}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                background: "none",
-                border: "none",
-                color: "var(--color-accent-gold)",
-                cursor: "pointer",
-                fontFamily: "var(--font-body)",
-                fontSize: "13px",
-                fontWeight: 500,
-              }}
+              className="flex items-center gap-1 bg-transparent border-none text-[var(--color-accent-gold)] cursor-pointer font-sans text-[13px] font-medium"
             >
               <RotateCcw size={12} />
               Retry
@@ -315,15 +252,7 @@ export function ChatLightbox() {
         {/* Row 3: Input */}
         <form
           onSubmit={handleSubmit}
-          style={{
-            flexShrink: 0,
-            borderTop: "1px solid var(--color-border)",
-            padding: "12px 16px",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            background: "var(--color-bg)",
-          }}
+          className="shrink-0 flex items-center gap-2 px-4 py-3 border-t border-[var(--color-border)] bg-[var(--color-bg)]"
         >
           <input
             ref={inputRef}
@@ -331,39 +260,18 @@ export function ChatLightbox() {
             onChange={handleInputChange}
             placeholder="Ask about Maria's work..."
             aria-label="Chat input"
-            style={{
-              flex: 1,
-              background: "transparent",
-              border: "none",
-              outline: "none",
-              fontFamily: "var(--font-body)",
-              fontSize: "14px",
-              fontWeight: 400,
-              color: "var(--color-text)",
-            }}
+            className="flex-1 bg-transparent border-none outline-none font-sans text-sm font-normal text-[var(--color-text)]"
           />
           <button
             type="submit"
             aria-label="Send message"
             disabled={!input.trim() || isLoading}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "var(--color-text-dim)",
-              cursor:
-                !input.trim() || isLoading ? "not-allowed" : "pointer",
-              transition: "color var(--dur-fast) var(--ease-out)",
-              display: "flex",
-              alignItems: "center",
-              opacity: !input.trim() || isLoading ? 0.4 : 1,
-            }}
-            onMouseEnter={(e) => {
-              if (input.trim() && !isLoading)
-                e.currentTarget.style.color = "var(--color-accent-gold)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--color-text-dim)";
-            }}
+            className={cn(
+              "flex items-center bg-transparent border-none transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]",
+              !input.trim() || isLoading
+                ? "text-[var(--color-text-dim)] opacity-40 cursor-not-allowed"
+                : "text-[var(--color-text-dim)] cursor-pointer hover:text-[var(--color-accent-gold)]"
+            )}
           >
             <Send size={16} />
           </button>

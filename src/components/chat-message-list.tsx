@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { FileText } from "lucide-react";
 import { PersonaAvatar } from "./persona-avatars";
+import { cn } from "@/lib/utils";
 import type { UIMessage } from "ai";
 import { personas as allPersonas, type PersonaId } from "@/lib/chatbot/personas";
 
@@ -39,22 +40,7 @@ export function ChatMessageList({
   // Build a per-message persona map by walking the messages and tracking handoffs
   const personaAtMessage: PersonaId[] = [];
   {
-    let current: PersonaId = (() => {
-      // Find the initial persona: it's the default unless the first handoff tells us otherwise
-      // Walk backwards from the start to find the initial persona
-      for (const msg of messages) {
-        if (msg.id?.startsWith("handoff-")) {
-          break; // first handoff means everything before it was the default
-        }
-      }
-      // The initial persona is the one before any handoffs — we derive it from defaultPersona
-      // But if the chat was opened with a non-default persona, we need the first persona
-      // The simplest: check the first handoff to see what it switches FROM isn't stored in the ID
-      // So we use "archivist" as the start (defaultPersona) — this is always correct
-      // because the chat always starts with the default persona's opening message
-      return "archivist" as PersonaId;
-    })();
-
+    let current: PersonaId = "archivist";
     for (const msg of messages) {
       if (msg.id?.startsWith("handoff-")) {
         const target = parseHandoffTarget(msg.id);
@@ -65,7 +51,7 @@ export function ChatMessageList({
   }
 
   return (
-    <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: "inherit" }}>
+    <div className="mt-auto flex flex-col gap-[inherit]">
       {messages.map((msg, i) => {
         const isHandoff = msg.id?.startsWith("handoff-");
 
@@ -79,28 +65,13 @@ export function ChatMessageList({
             <div
               key={msg.id}
               data-testid="handoff-message"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                margin: "8px 24px",
-              }}
+              className="flex items-center gap-3 mx-6 my-2"
             >
-              <div style={{ flex: 1, height: "1px", background: "var(--color-border)" }} />
-              <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "13px",
-                  fontStyle: "italic",
-                  color: "var(--color-text-muted)",
-                  lineHeight: 1.6,
-                  whiteSpace: "pre-line",
-                  textAlign: "center",
-                }}
-              >
+              <div className="flex-1 h-px bg-[var(--color-border)]" />
+              <span className="font-sans text-[13px] italic text-[var(--color-text-muted)] leading-relaxed whitespace-pre-line text-center">
                 {text}
               </span>
-              <div style={{ flex: 1, height: "1px", background: "var(--color-border)" }} />
+              <div className="flex-1 h-px bg-[var(--color-border)]" />
             </div>
           );
         }
@@ -129,22 +100,12 @@ export function ChatMessageList({
             {showPersonaLabel && (
               <div
                 data-testid="persona-label"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  marginBottom: "4px",
-                }}
+                className="flex items-center gap-1.5 mb-1"
               >
                 <PersonaAvatar personaId={msgPersonaId} size={14} />
                 <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "10px",
-                    color: msgPersona.accent,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                  }}
+                  className="font-mono text-[10px] tracking-widest uppercase"
+                  style={{ color: msgPersona.accent }}
                 >
                   {msgPersona.label}
                 </span>
@@ -153,30 +114,13 @@ export function ChatMessageList({
 
             {textContent && (
               <div
-                style={{
-                  maxWidth: "70%",
-                  width: "fit-content",
-                  borderRadius: "4px",
-                  padding: "10px 14px",
-                  fontSize: "14px",
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 400,
-                  lineHeight: 1.5,
-                  ...(isUser
-                    ? {
-                        alignSelf: "flex-end",
-                        marginLeft: "auto",
-                        background: "rgba(201, 168, 76, 0.15)",
-                        color: "var(--color-text)",
-                      }
-                    : {
-                        alignSelf: "flex-start",
-                        marginRight: "auto",
-                        background: "var(--color-tag-bg)",
-                        color: "var(--color-text)",
-                        borderLeft: `2px solid ${msgPersona.accent}`,
-                      }),
-                }}
+                className={cn(
+                  "max-w-[70%] w-fit rounded-[4px] px-3.5 py-2.5 text-sm font-sans font-normal leading-normal",
+                  isUser
+                    ? "self-end ml-auto bg-[rgba(201,168,76,0.15)] text-[var(--color-text)]"
+                    : "self-start mr-auto bg-[var(--color-tag-bg)] text-[var(--color-text)] border-l-2"
+                )}
+                style={!isUser ? { borderLeftColor: msgPersona.accent } : undefined}
               >
                 {isUser ? (
                   textContent
@@ -209,51 +153,17 @@ export function ChatMessageList({
                     key={toolPart.toolCallId}
                     href={result.url as string}
                     download
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      border: "1px solid var(--color-accent-gold)",
-                      borderRadius: "var(--r)",
-                      padding: "12px 16px",
-                      background: "var(--color-bg)",
-                      textDecoration: "none",
-                      marginTop: "8px",
-                      maxWidth: "70%",
-                      cursor: "pointer",
-                      transition:
-                        "background var(--dur-fast) var(--ease-out)",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background =
-                        "var(--color-surface)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = "var(--color-bg)")
-                    }
+                    className="flex items-center gap-3 border border-[var(--color-accent-gold)] rounded-[var(--r)] px-4 py-3 bg-[var(--color-bg)] no-underline mt-2 max-w-[70%] cursor-pointer transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:bg-[var(--color-surface)]"
                   >
                     <FileText
                       size={16}
-                      style={{ color: "var(--color-accent-gold)" }}
+                      className="text-[var(--color-accent-gold)]"
                     />
                     <span>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontSize: "12px",
-                          color: "var(--color-text)",
-                          display: "block",
-                        }}
-                      >
+                      <span className="font-mono text-xs text-[var(--color-text)] block">
                         maria-gurevich-cv.pdf
                       </span>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-body)",
-                          fontSize: "12px",
-                          color: "var(--color-accent-gold)",
-                        }}
-                      >
+                      <span className="font-sans text-xs text-[var(--color-accent-gold)]">
                         Download PDF
                       </span>
                     </span>
@@ -265,26 +175,11 @@ export function ChatMessageList({
                 return (
                   <div
                     key={toolPart.toolCallId}
-                    style={{
-                      border: "1px solid var(--color-accent-gold)",
-                      borderRadius: "var(--r)",
-                      padding: "12px 16px",
-                      background: "var(--color-bg)",
-                      marginTop: "8px",
-                      maxWidth: "70%",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "4px",
-                    }}
+                    className="border border-[var(--color-accent-gold)] rounded-[var(--r)] px-4 py-3 bg-[var(--color-bg)] mt-2 max-w-[70%] flex flex-col gap-1"
                   >
                     <a
                       href={`mailto:${result.email}`}
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: "13px",
-                        color: "var(--color-accent-gold)",
-                        textDecoration: "none",
-                      }}
+                      className="font-sans text-[13px] text-[var(--color-accent-gold)] no-underline"
                     >
                       {result.email as string}
                     </a>
@@ -292,12 +187,7 @@ export function ChatMessageList({
                       href={result.linkedin as string}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: "13px",
-                        color: "var(--color-text-muted)",
-                        textDecoration: "none",
-                      }}
+                      className="font-sans text-[13px] text-[var(--color-text-muted)] no-underline"
                     >
                       LinkedIn
                     </a>
@@ -305,12 +195,7 @@ export function ChatMessageList({
                       href={result.github as string}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: "13px",
-                        color: "var(--color-text-muted)",
-                        textDecoration: "none",
-                      }}
+                      className="font-sans text-[13px] text-[var(--color-text-muted)] no-underline"
                     >
                       GitHub
                     </a>
@@ -328,17 +213,8 @@ export function ChatMessageList({
         (messages.length === 0 ||
           messages[messages.length - 1].role === "user") && (
           <div
-            style={{
-              maxWidth: "70%",
-              width: "fit-content",
-              borderRadius: "4px",
-              padding: "10px 14px",
-              fontSize: "14px",
-              fontFamily: "var(--font-body)",
-              background: "var(--color-tag-bg)",
-              color: "var(--color-text-muted)",
-              borderLeft: `2px solid ${allPersonas[activePersonaId].accent}`,
-            }}
+            className="max-w-[70%] w-fit rounded-[4px] px-3.5 py-2.5 text-sm font-sans bg-[var(--color-tag-bg)] text-[var(--color-text-muted)] border-l-2"
+            style={{ borderLeftColor: allPersonas[activePersonaId].accent }}
           >
             <span className="thinking-dots" aria-label="Thinking">
               <span>.</span><span>.</span><span>.</span>

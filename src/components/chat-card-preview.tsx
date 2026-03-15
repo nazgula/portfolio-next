@@ -19,41 +19,11 @@ export function ChatCardPreview() {
   }, [messages, hasInteracted]);
 
   return (
-    <div
-      style={{
-        position: "relative",
-        width: "100%",
-        aspectRatio: "16 / 9",
-        borderRadius: "var(--r)",
-        overflow: "hidden",
-        background: "var(--color-bg)",
-        border: "1px solid var(--color-border)",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        boxShadow: "var(--shadow-card)",
-        transition: "box-shadow var(--dur-std) var(--ease-out)",
-      }}
-      onMouseEnter={(e) =>
-        (e.currentTarget.style.boxShadow = "var(--shadow-lift)")
-      }
-      onMouseLeave={(e) =>
-        (e.currentTarget.style.boxShadow = "var(--shadow-card)")
-      }
-    >
+    <div className="relative w-full aspect-[16/9] rounded-[var(--r)] overflow-hidden bg-[var(--color-bg)] border border-[var(--color-border)] flex flex-col justify-end shadow-[var(--shadow-card)] transition-shadow duration-[var(--dur-std)] ease-[var(--ease-out)] hover:shadow-[var(--shadow-lift)]">
       {/* Messages area */}
       <div
         ref={scrollRef}
-        style={{
-          flex: 1,
-          minHeight: 0,
-          overflowY: "hidden",
-          padding: "16px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          gap: "12px",
-        }}
+        className="flex-1 min-h-0 overflow-y-hidden p-4 flex flex-col justify-end gap-3"
       >
         {hasInteracted ? (
           <ChatMessageList
@@ -64,42 +34,13 @@ export function ChatCardPreview() {
         ) : (
           <>
             {/* Assistant bubble */}
-            <div
-              style={{
-                maxWidth: "85%",
-                width: "fit-content",
-                borderRadius: "4px",
-                padding: "10px 14px",
-                fontSize: "13px",
-                fontFamily: "var(--font-body)",
-                fontWeight: 400,
-                lineHeight: 1.6,
-                background: "var(--color-tag-bg)",
-                color: "var(--color-text)",
-                borderLeft: "2px solid var(--color-accent-gold)",
-              }}
-            >
+            <div className="max-w-[85%] w-fit rounded-[4px] px-3.5 py-2.5 text-[13px] font-sans font-normal leading-relaxed bg-[var(--color-tag-bg)] text-[var(--color-text)] border-l-2 border-l-[var(--color-accent-gold)]">
               I&apos;m the Archivist. Ask me about Maria&apos;s work — or pick
               a guide: ⚓ Saltwood · 👾 Glitch · 🕐 Voss
             </div>
 
             {/* User bubble */}
-            <div
-              style={{
-                maxWidth: "70%",
-                width: "fit-content",
-                borderRadius: "4px",
-                padding: "10px 14px",
-                fontSize: "13px",
-                fontFamily: "var(--font-body)",
-                fontWeight: 400,
-                lineHeight: 1.5,
-                alignSelf: "flex-end",
-                marginLeft: "auto",
-                background: "rgba(201, 168, 76, 0.15)",
-                color: "var(--color-text)",
-              }}
-            >
+            <div className="max-w-[70%] w-fit rounded-[4px] px-3.5 py-2.5 text-[13px] font-sans font-normal leading-normal self-end ml-auto bg-[rgba(201,168,76,0.15)] text-[var(--color-text)]">
               Choose your guide. Ask anything.
             </div>
           </>
@@ -107,50 +48,19 @@ export function ChatCardPreview() {
       </div>
 
       {/* Fake input bar — visual only */}
-      <div
-        style={{
-          flexShrink: 0,
-          borderTop: "1px solid var(--color-border)",
-          padding: "12px 16px",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          background: "var(--color-bg)",
-          pointerEvents: "none",
-          opacity: 0.5,
-        }}
-      >
-        <div
-          style={{
-            flex: 1,
-            fontFamily: "var(--font-body)",
-            fontSize: "14px",
-            fontWeight: 400,
-            color: "var(--color-text-dim)",
-          }}
-        >
+      <div className="shrink-0 flex items-center gap-2 px-4 py-3 border-t border-[var(--color-border)] bg-[var(--color-bg)] pointer-events-none opacity-50">
+        <div className="flex-1 font-sans text-sm font-normal text-[var(--color-text-dim)]">
           Ask about Maria&apos;s work...
         </div>
-        <div
-          style={{
-            color: "var(--color-text-dim)",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <div className="flex items-center text-[var(--color-text-dim)]">
           <Send size={16} />
         </div>
       </div>
 
-      {/* Click overlay — captures all clicks, opens lightbox */}
+      {/* Click overlay */}
       <div
         onClick={openChat}
-        style={{
-          position: "absolute",
-          inset: 0,
-          cursor: "pointer",
-          zIndex: 1,
-        }}
+        className="absolute inset-0 cursor-pointer z-[1]"
         aria-label="Open chat"
         role="button"
         tabIndex={0}
