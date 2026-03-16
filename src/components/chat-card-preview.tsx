@@ -19,7 +19,7 @@ export function ChatCardPreview() {
   }, [messages, hasInteracted]);
 
   return (
-    <div className="relative w-full aspect-[16/9] rounded-[var(--r)] overflow-hidden bg-[var(--color-bg)] border border-[var(--color-border)] flex flex-col justify-end shadow-[var(--shadow-card)] transition-shadow duration-[var(--dur-std)] ease-[var(--ease-out)] hover:shadow-[var(--shadow-lift)]">
+    <div className="relative w-full aspect-[16/11] rounded-[var(--r)] overflow-hidden bg-[var(--color-bg)] border border-[var(--color-border)] flex flex-col justify-end shadow-[var(--shadow-card)] transition-shadow duration-[var(--dur-std)] ease-[var(--ease-out)] hover:shadow-[var(--shadow-lift)]">
       {/* Messages area */}
       <div
         ref={scrollRef}
@@ -33,15 +33,20 @@ export function ChatCardPreview() {
           />
         ) : (
           <>
-            {/* Assistant bubble */}
+            {/* Assistant bubble — short on mobile, full on desktop */}
             <div className="max-w-[85%] w-fit rounded-[4px] px-3.5 py-2.5 text-[13px] font-sans font-normal leading-relaxed bg-[var(--color-tag-bg)] text-[var(--color-text)] border-l-2 border-l-[var(--color-accent-gold)]">
-              I&apos;m the Archivist. Ask me about Maria&apos;s work — or pick
-              a guide: ⚓ Saltwood · 👾 Glitch · 🕐 Voss
+              <span className="hidden sm:inline">
+                I&apos;m the Archivist. Ask me about Maria&apos;s work — or pick
+                a guide: ⚓ Saltwood · 👾 Glitch · 🕐 Voss
+              </span>
+              <span className="sm:hidden">
+                Pick a guide: 📜 Archivist · ⚓ Saltwood · 👾 Glitch · 🕐 Voss
+              </span>
             </div>
 
             {/* User bubble */}
             <div className="max-w-[70%] w-fit rounded-[4px] px-3.5 py-2.5 text-[13px] font-sans font-normal leading-normal self-end ml-auto bg-[rgba(201,168,76,0.15)] text-[var(--color-text)]">
-              Choose your guide. Ask anything.
+              Ask anything.
             </div>
           </>
         )}

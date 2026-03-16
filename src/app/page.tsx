@@ -55,6 +55,7 @@ export default function Home() {
           position: "relative",
           background: "var(--color-surface)",
           minHeight: "clamp(320px, 45vw, 520px)",
+          marginBottom: "var(--sp-6)",
           display: "flex",
           alignItems: "center",
           overflow: "hidden",
@@ -82,8 +83,9 @@ export default function Home() {
               height: "100%",
               objectFit: "cover",
               objectPosition: "center 15%",
-              maskImage: "linear-gradient(to right, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)",
-              WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%)",
+              opacity: 0.7,
+              maskImage: "linear-gradient(to right, rgba(0,0,0,1) 20%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%)",
+              WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,1) 20%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 100%)",
             }}
           />
         </div>
@@ -141,6 +143,7 @@ export default function Home() {
         />
 
         <p
+          className="hero-tagline"
           style={{
             fontFamily: "var(--font-display)",
             fontSize: "clamp(22px, 3vw, 32px)",
@@ -254,14 +257,14 @@ export default function Home() {
                 color: "var(--color-text-muted)",
                 maxWidth: "560px",
                 marginBottom: "var(--sp-2)",
+                textAlign: "justify",
               }}
             >
-              A conversational AI built with the Claude API and Vercel AI SDK,
-              deployed on Next.js. Ask it anything about my work, skills, or
-              availability — it answers from a curated context window.
+              A conversational AI built with the Claude API and Vercel AI SDK, deployed on Next.js. Ask it anything about my work, skills, or availability — it answers from a curated context window.
             </p>
 
             <div
+              className="tech-stack"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "13px",
@@ -289,6 +292,8 @@ export default function Home() {
           </div>
         </div>
 
+        <DecoRule className="card-divider" />
+
         {projects.map((project, i) => {
           const isReverse = i % 2 === 1;
           const chipStyle = getRoleChipStyle(project.role);
@@ -297,8 +302,9 @@ export default function Home() {
             : [];
 
           return (
+            <div key={i}>
+            {i > 0 && <DecoRule className="card-divider" />}
             <div
-              key={i}
               className={`project-card animate-fade-up ${isReverse ? "reverse" : ""}`}
               style={{
                 display: "flex",
@@ -381,6 +387,7 @@ export default function Home() {
                     color: "var(--color-text-muted)",
                     maxWidth: "560px",
                     marginBottom: "var(--sp-2)",
+                    textAlign: "justify",
                   }}
                 >
                   {project.description}
@@ -388,11 +395,13 @@ export default function Home() {
 
                 {techItems.length > 0 && (
                   <div
+                    className="tech-stack"
                     style={{
                       fontFamily: "var(--font-mono)",
                       fontSize: "13px",
                       fontWeight: 500,
                       letterSpacing: "0.04em",
+                      lineHeight: 2,
                       color: "var(--color-text)",
                     }}
                   >
@@ -419,6 +428,7 @@ export default function Home() {
                   onImageClick={openLightbox}
                 />
               </div>
+            </div>
             </div>
           );
         })}

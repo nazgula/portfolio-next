@@ -3,7 +3,7 @@
 import { useEffect, useRef, useCallback, useState, useMemo, type ChangeEvent } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { Send, X, RotateCcw } from "lucide-react";
+import { Send, X, RotateCcw, ChevronDown } from "lucide-react";
 import { useChatContext } from "@/lib/chatbot/chat-context";
 import { personas, type PersonaId } from "@/lib/chatbot/personas";
 import { cn } from "@/lib/utils";
@@ -30,6 +30,7 @@ export function ChatLightbox() {
   // Track persona to detect switches
   const currentPersonaRef = useRef(activePersona);
   const [input, setInput] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const transport = useMemo(
     () => new DefaultChatTransport({}),
@@ -76,6 +77,7 @@ export function ChatLightbox() {
 
   const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Focus input when lightbox opens
   useEffect(() => {
@@ -85,11 +87,27 @@ export function ChatLightbox() {
     }
   }, [isOpen]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [dropdownOpen]);
+
   // Close on Escape + focus trap
   useEffect(() => {
     if (!isOpen) return;
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        if (dropdownOpen) {
+          setDropdownOpen(false);
+          return;
+        }
         closeChat();
         return;
       }
@@ -115,12 +133,13 @@ export function ChatLightbox() {
       document.removeEventListener("keydown", handleKey);
       document.body.style.overflow = "";
     };
-  }, [isOpen, closeChat]);
+  }, [isOpen, closeChat, dropdownOpen]);
 
   const handlePersonaSwitch = useCallback(
     (id: PersonaId) => {
       if (id === activePersona) return;
       switchPersona(id);
+      setDropdownOpen(false);
     },
     [activePersona, switchPersona]
   );
@@ -154,16 +173,17 @@ export function ChatLightbox() {
   if (!isOpen) return null;
 
   const isLoading = status === "streaming";
+  const currentPersona = personas[activePersona];
 
   return (
     <div
       className="animate-lightbox-fade fixed inset-0 z-[1000] flex items-center justify-center bg-[rgba(15,17,23,0.94)] backdrop-blur-[12px]"
       onClick={(e) => e.target === e.currentTarget && closeChat()}
     >
-      {/* Panel */}
+      {/* Panel — full-screen on mobile, centered card on desktop */}
       <div
         ref={panelRef}
-        className="relative flex flex-col overflow-hidden border border-[var(--color-border)] rounded-[var(--r-lg)] shadow-[var(--shadow-dark)] bg-[var(--color-surface)] w-[min(760px,90vw)] h-[min(600px,85vh)]"
+        className="relative flex flex-col overflow-hidden bg-[var(--color-surface)] shadow-[var(--shadow-dark)] w-screen h-screen sm:w-[min(760px,90vw)] sm:h-[min(600px,85vh)] sm:border sm:border-[var(--color-border)] sm:rounded-[var(--r-lg)]"
       >
         {/* Close button */}
         <button
@@ -174,43 +194,101 @@ export function ChatLightbox() {
           <X size={18} />
         </button>
 
-        {/* Row 1: Persona selector bar */}
-        <div className="h-[72px] shrink-0 flex items-center gap-2 px-6 border-b border-[var(--color-border)] bg-[var(--color-bg)]">
-          {(Object.keys(personas) as PersonaId[]).map((id) => {
-            const p = personas[id];
-            const isActive = id === activePersona;
-            return (
-              <button
-                key={id}
-                onClick={() => handlePersonaSwitch(id)}
-                className={cn(
-                  "flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] border cursor-pointer transition-all duration-[var(--dur-fast)] ease-[var(--ease-out)]",
-                  isActive
-                    ? "bg-[var(--color-tag-bg)]"
-                    : "bg-transparent hover:bg-[var(--color-surface)] hover:border-[var(--color-border-dark)]"
-                )}
-                style={{
-                  borderColor: isActive ? p.accent : "var(--color-border)",
-                }}
-              >
-                <PersonaAvatar personaId={id} size={20} />
-                <span
+        {/* Row 1: Persona selector — horizontal buttons on desktop, dropdown on mobile */}
+        <div className="shrink-0 flex items-center border-b border-[var(--color-border)] bg-[var(--color-bg)] px-4 sm:px-6 h-[56px] sm:h-[72px]">
+
+          {/* Desktop: horizontal button row */}
+          <div className="hidden sm:flex items-center gap-2">
+            {(Object.keys(personas) as PersonaId[]).map((id) => {
+              const p = personas[id];
+              const isActive = id === activePersona;
+              return (
+                <button
+                  key={id}
+                  onClick={() => handlePersonaSwitch(id)}
                   className={cn(
-                    "font-sans text-xs font-medium",
+                    "flex items-center gap-2 px-3.5 py-1.5 rounded-[var(--r-pill)] border cursor-pointer transition-all duration-[var(--dur-fast)] ease-[var(--ease-out)]",
                     isActive
-                      ? "text-[var(--color-text)]"
-                      : "text-[var(--color-text-muted)]"
+                      ? "bg-[var(--color-tag-bg)]"
+                      : "bg-transparent hover:bg-[var(--color-surface)] hover:border-[var(--color-border-dark)]"
                   )}
+                  style={{
+                    borderColor: isActive ? p.accent : "var(--color-border)",
+                  }}
                 >
-                  {p.label}
-                </span>
-              </button>
-            );
-          })}
+                  <PersonaAvatar personaId={id} size={20} />
+                  <span
+                    className={cn(
+                      "font-sans text-xs font-medium",
+                      isActive
+                        ? "text-[var(--color-text)]"
+                        : "text-[var(--color-text-muted)]"
+                    )}
+                  >
+                    {p.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Mobile: dropdown */}
+          <div ref={dropdownRef} className="relative sm:hidden">
+            <button
+              onClick={() => setDropdownOpen((o) => !o)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--r-pill)] border bg-[var(--color-tag-bg)] cursor-pointer transition-all duration-[var(--dur-fast)] ease-[var(--ease-out)]"
+              style={{ borderColor: currentPersona.accent }}
+            >
+              <PersonaAvatar personaId={activePersona} size={20} />
+              <span className="font-sans text-xs font-medium text-[var(--color-text)]">
+                {currentPersona.label}
+              </span>
+              <ChevronDown
+                size={14}
+                className={cn(
+                  "text-[var(--color-text-muted)] transition-transform duration-[var(--dur-fast)]",
+                  dropdownOpen && "rotate-180"
+                )}
+              />
+            </button>
+
+            {dropdownOpen && (
+              <div className="absolute top-full left-0 mt-1 z-20 min-w-[180px] rounded-[var(--r-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-lift)] overflow-hidden">
+                {(Object.keys(personas) as PersonaId[]).map((id) => {
+                  const p = personas[id];
+                  const isActive = id === activePersona;
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => handlePersonaSwitch(id)}
+                      className={cn(
+                        "flex items-center gap-2.5 w-full px-3.5 py-2.5 border-none cursor-pointer transition-colors duration-[var(--dur-fast)] ease-[var(--ease-out)]",
+                        isActive
+                          ? "bg-[var(--color-tag-bg)]"
+                          : "bg-transparent hover:bg-[var(--color-bg)]"
+                      )}
+                    >
+                      <PersonaAvatar personaId={id} size={18} />
+                      <span
+                        className={cn(
+                          "font-sans text-[13px] font-medium",
+                          isActive
+                            ? "text-[var(--color-text)]"
+                            : "text-[var(--color-text-muted)]"
+                        )}
+                      >
+                        {p.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Row 2: Messages */}
-        <div className="chat-lightbox-messages flex-1 min-h-0 overflow-y-auto flex flex-col gap-4 p-6 scrollbar-thin scrollbar-[var(--color-border)]">
+        <div className="chat-lightbox-messages flex-1 min-h-0 overflow-y-auto flex flex-col gap-4 p-4 sm:p-6 scrollbar-thin scrollbar-[var(--color-border)]">
           <ChatMessageList
             messages={messages}
             activePersonaId={activePersona}

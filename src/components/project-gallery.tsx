@@ -28,7 +28,7 @@ export function ProjectGallery({
         style={{
           position: "relative",
           width: "100%",
-          aspectRatio: "16 / 10",
+          aspectRatio: "16 / 11",
           borderRadius: "var(--r)",
           overflow: "hidden",
           background: "var(--color-border)",
