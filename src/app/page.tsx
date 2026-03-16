@@ -70,17 +70,17 @@ export default function Home() {
           <span className="corner-ornament bottom-left" />
           <span className="corner-ornament bottom-right" />
 
-          <h1 className="font-[var(--font-display)] text-[clamp(48px,7vw,88px)] font-light tracking-[-0.03em] leading-[1.1] text-[var(--color-text)] m-0 mb-[var(--sp-2)]">
+          <h1 className="[font-family:var(--font-display)] text-[clamp(48px,7vw,88px)] font-light tracking-[-0.03em] leading-[1.1] text-[var(--color-text)] m-0 mb-[var(--sp-2)]">
           Maria Gurevich
         </h1>
 
-        <p className="font-[var(--font-body)] text-[clamp(11px,1.2vw,13px)] font-medium tracking-[0.2em] uppercase text-[var(--color-text-muted)] m-0 mb-[var(--sp-2)]">
+        <p className="[font-family:var(--font-body)] text-[clamp(11px,1.2vw,13px)] font-medium tracking-[0.2em] uppercase text-[var(--color-text-muted)] m-0 mb-[var(--sp-2)]">
           Fullstack Developer &middot; UX Designer &middot; Building with AI
         </p>
 
         <div className="w-full max-w-[320px] h-px bg-[var(--color-border)] mx-auto mb-[var(--sp-3)]" />
 
-        <p className="hero-tagline font-[var(--font-display)] text-[clamp(22px,3vw,32px)] font-normal text-[var(--color-text-muted)] mx-auto mb-[var(--sp-3)] text-center w-full block">
+        <p className="hero-tagline [font-family:var(--font-display)] text-[clamp(22px,3vw,32px)] font-normal text-[var(--color-text-muted)] mx-auto mb-[var(--sp-3)] text-center w-full block">
           I build what I want because I can.
         </p>
 
@@ -95,27 +95,27 @@ export default function Home() {
         <div id="portfolio-assistant-card" className="project-card animate-fade-up flex flex-row gap-[var(--sp-6)] py-[var(--sp-2)] px-0 mb-[var(--sp-12)] bg-[var(--color-surface)] rounded-[var(--r)] shadow-[var(--shadow-card)] [animation-fill-mode:both]">
           {/* Text side */}
           <div className="flex-[1_1_55%] min-w-0 py-[var(--sp-2)] px-[var(--sp-6)]">
-            <h2 className="font-[var(--font-display)] text-[28px] font-medium tracking-[-0.01em] text-[var(--color-text)] mb-[var(--sp-1)]">
+            <h2 className="[font-family:var(--font-display)] text-[28px] font-medium tracking-[-0.01em] text-[var(--color-text)] mb-[var(--sp-1)]">
               Portfolio Assistant
             </h2>
 
             <div className="flex flex-wrap items-center gap-[var(--sp-1)] mb-[var(--sp-2)]">
-              <span className="font-[var(--font-mono)] text-[12px] text-[var(--color-text-dim)] tracking-[0.06em]">
+              <span className="[font-family:var(--font-mono)] text-[12px] text-[var(--color-text-dim)] tracking-[0.06em]">
                 2025 · Ongoing
               </span>
               <span
-                className="rounded-[var(--r-pill)] px-3 py-0.5 text-[11px] font-medium font-[var(--font-body)]"
+                className="rounded-[var(--r-pill)] px-3 py-0.5 text-[11px] font-medium [font-family:var(--font-body)]"
                 style={{ background: "#E8E0F0", color: "#3A1A5A" }}
               >
                 AI Engineer
               </span>
             </div>
 
-            <p className="font-[var(--font-body)] text-[18px] font-normal leading-[1.7] text-[var(--color-text-muted)] max-w-[560px] mb-[var(--sp-2)] text-justify">
+            <p className="[font-family:var(--font-body)] text-[18px] font-normal leading-[1.7] text-[var(--color-text-muted)] max-w-[560px] mb-[var(--sp-2)] text-justify">
               A conversational AI built with the Claude API and Vercel AI SDK, deployed on Next.js. Ask it anything about my work, skills, or availability — it answers from a curated context window.
             </p>
 
-            <div className="tech-stack font-[var(--font-mono)] text-[13px] font-medium tracking-[0.04em] text-[var(--color-text)]">
+            <div className="tech-stack [font-family:var(--font-mono)] text-[13px] font-medium tracking-[0.04em] text-[var(--color-text)]">
               Claude API · Vercel AI SDK · Next.js · TypeScript
             </div>
           </div>
@@ -144,19 +144,19 @@ export default function Home() {
             >
               {/* Project Info */}
               <div className="flex-[1_1_55%] min-w-0 py-[var(--sp-4)] px-[var(--sp-6)]">
-                <h2 className="font-[var(--font-display)] text-[28px] font-medium tracking-[-0.01em] text-[var(--color-text)] mb-[var(--sp-1)]">
+                <h2 className="[font-family:var(--font-display)] text-[28px] font-medium tracking-[-0.01em] text-[var(--color-text)] mb-[var(--sp-1)]">
                   {project.name}
                 </h2>
 
                 <div className="flex flex-wrap items-center gap-[var(--sp-1)] mb-[var(--sp-2)]">
                   {project.dateRange && (
-                    <span className="font-[var(--font-mono)] text-[12px] text-[var(--color-text-dim)] tracking-[0.06em]">
+                    <span className="[font-family:var(--font-mono)] text-[12px] text-[var(--color-text-dim)] tracking-[0.06em]">
                       {project.dateRange}
                     </span>
                   )}
                   {project.role && (
                     <span
-                      className="rounded-[var(--r-pill)] px-3 py-0.5 text-[11px] font-medium font-[var(--font-body)]"
+                      className="rounded-[var(--r-pill)] px-3 py-0.5 text-[11px] font-medium [font-family:var(--font-body)]"
                       style={chipStyle}
                     >
                       {project.role}
@@ -164,12 +164,12 @@ export default function Home() {
                   )}
                 </div>
 
-                <p className="font-[var(--font-body)] text-[18px] font-normal leading-[1.7] text-[var(--color-text-muted)] max-w-[560px] mb-[var(--sp-2)] text-justify">
+                <p className="[font-family:var(--font-body)] text-[18px] font-normal leading-[1.7] text-[var(--color-text-muted)] max-w-[560px] mb-[var(--sp-2)] text-justify">
                   {project.description}
                 </p>
 
                 {techItems.length > 0 && (
-                  <div className="tech-stack font-[var(--font-mono)] text-[13px] font-medium tracking-[0.04em] leading-[2] text-[var(--color-text)]">
+                  <div className="tech-stack [font-family:var(--font-mono)] text-[13px] font-medium tracking-[0.04em] leading-[2] text-[var(--color-text)]">
                     {techItems.join(" · ")}
                   </div>
                 )}
@@ -198,7 +198,7 @@ export default function Home() {
           href="/resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block font-[var(--font-body)] text-[13px] font-medium tracking-[0.1em] uppercase text-[var(--color-accent-gold)] border border-[var(--color-accent-gold)] rounded-[var(--r)] px-7 py-2.5 no-underline transition-[background,color] duration-[var(--dur-std)] ease-[var(--ease-out)] hover:bg-[var(--color-accent-gold)] hover:text-[var(--color-text)]"
+          className="inline-block [font-family:var(--font-body)] text-[13px] font-medium tracking-[0.1em] uppercase text-[var(--color-accent-gold)] border border-[var(--color-accent-gold)] rounded-[var(--r)] px-7 py-2.5 no-underline transition-[background,color] duration-[var(--dur-std)] ease-[var(--ease-out)] hover:bg-[var(--color-accent-gold)] hover:text-[var(--color-text)]"
         >
           Full Resume
         </a>
@@ -212,7 +212,7 @@ export default function Home() {
         <div className="flex items-center justify-center gap-[var(--sp-3)] flex-wrap">
           <a
             href="mailto:maria.gur.dev@gmail.com"
-            className="font-[var(--font-body)] text-[15px] font-normal text-[var(--color-text)] no-underline transition-colors duration-[var(--dur-std)] ease-[var(--ease-out)] inline-block hover:text-[var(--color-accent-gold)]"
+            className="[font-family:var(--font-body)] text-[15px] font-normal text-[var(--color-text)] no-underline transition-colors duration-[var(--dur-std)] ease-[var(--ease-out)] inline-block hover:text-[var(--color-accent-gold)]"
           >
             maria.gur.dev@gmail.com
           </a>
