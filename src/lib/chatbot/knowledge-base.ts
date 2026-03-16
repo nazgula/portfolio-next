@@ -15,11 +15,11 @@ Phone: Do NOT share. It is in the downloadable CV. Direct the user to the CV dow
 Primary positioning: Full-stack developer with a strong UX/design background, actively building AI-powered applications.
 Core stack: React, TypeScript, Next.js, Node.js
 What makes her different: Maria bridges design and development. She can take a product from user research and wireframes all the way through to shipped code. This is rare — most developers don't design, and most designers don't code. Maria does both.
-Current focus: AI application development — actively learning and building with LLM APIs (Anthropic Claude SDK, Vercel AI SDK), RAG, and agent workflows. Learning by doing: writing code daily, building projects, and working through a structured 12-week curriculum.
+Current focus: Co-founding Super-Cut, an AI video editor for professional editors, where she leads UX design, frontend development (Electron/TypeScript), brand identity, and Claude SDK integration. Alongside this, actively deepening AI skills — LLM APIs, RAG, tool use, agent workflows, and context engineering. Learning by doing: building real products daily.
 
 3. TECHNICAL SKILLS
 
-Frontend: React, Next.js, TypeScript, JavaScript (ES6+), Redux, Tailwind CSS, HTML5, CSS3. Has worked with Angular/Ionic in earlier roles.
+Frontend: React, Next.js, TypeScript, JavaScript (ES6+), Redux, Tailwind CSS, HTML5, CSS3, Electron. Has worked with Angular/Ionic in earlier roles.
 
 Backend: Node.js, REST APIs, SQL (PostgreSQL, Oracle, DB2), Firestore (NoSQL), RabbitMQ, Docker, Bash scripting.
 
@@ -65,8 +65,11 @@ Designed UX and built the frontend for a unified counter-UAS detection and neutr
 BitcoinOS (May 2024–Nov 2025) | Full-Stack Developer & Project Lead
 Maria's most substantial recent role. Built and managed multiple Bitcoin-native MVP products end-to-end for a platform with 150,000+ users. Wrote functional and technical specifications, defined APIs, coordinated implementation across teams. Technologies: TypeScript, Node.js, React, SQL, RabbitMQ, Docker, Balsamiq.
 
-Current (2026) | AI Application Development
-Actively building AI-powered applications using the Anthropic Claude SDK, Vercel AI SDK, and Next.js. Working through a structured learning plan covering LLM APIs, RAG, tool use, agent workflows, and MCP. This portfolio site is itself one of her learning projects.
+Super-Cut (Feb 2026–Present) | Co-Founder — UX, Frontend & Brand
+Co-founding an AI video editor for professional editors: editors speak natural-language direction, and the AI builds and revises cuts in response. Maria leads UX design, the Electron/TypeScript desktop frontend, brand identity, and the Claude SDK conversational editing interface — including context and prompt engineering. Pre-seed, bootstrapped, three-person team. Currently in product definition / moving into build. No shipped product yet — frame as: "Maria is co-founding an AI product, leading design, frontend, and the AI dialogue layer."
+
+Current (2026) | AI Learning & Portfolio Projects
+Alongside Super-Cut, working through a structured learning plan covering LLM APIs, RAG, tool use, agent workflows, and MCP. This portfolio site is one of her hands-on learning projects — built with the Anthropic Claude SDK, Vercel AI SDK, and Next.js.
 
 5. EDUCATION
 B.A. General Studies (incomplete) — Tel Aviv University
