@@ -30,6 +30,7 @@ Act as an AI development expert and fullstack developer.
 - **Flag mock drift in tests.** When mocking a core integration (e.g., `useChat`), note what the mock doesn't cover and flag if real-format testing is needed.
 - **Stop and regroup after 2 failed approaches.** If two different attempts at solving a problem both fail, stop and summarize what was tried instead of continuing to debug. Ask whether to keep going or try a different direction.
 - **Flag when going in circles.** If hitting the same error twice or deep-diving into `node_modules`, pause, say so, and suggest a different approach.
+- **Cross-check DESIGN_SYSTEM.md before visual work.** Before changing layout, spacing, colors, or responsive behavior, re-read the relevant section of DESIGN_SYSTEM.md to verify token choices and conventions. Don't rely on memory.
 
 ## Tech Stack
 - **Framework:** Next.js 16 (App Router, React 19, TypeScript 5)
@@ -54,10 +55,14 @@ src/
     page.tsx              # Main page (client component) — hero, projects, footer
     layout.tsx            # Root layout, Google Fonts (Cormorant Garamond, Jost, DM Mono)
     globals.css           # Design tokens, animations, deco patterns
-    api/chat/route.ts     # POST — streaming Claude Haiku endpoint (AI SDK v6)
+    api/
+      chat/
+        route.ts          # POST — streaming Claude Haiku endpoint (AI SDK v6)
+        __tests__/        # API route tests
   components/
     chat-lightbox.tsx     # Lightbox chat UI (NPC persona chatbot)
     chat-card-preview.tsx # Inline chat card on homepage
+    chat-message-list.tsx # Shared message list renderer (used by lightbox + card preview)
     chat-widget.tsx       # Floating chat button (IntersectionObserver toggle)
     persona-avatars.tsx   # NPC persona avatar components
     project-gallery.tsx   # Image carousel (16:10, dots nav)
@@ -72,10 +77,13 @@ src/
     utils.ts              # cn() — clsx + tailwind-merge
     chatbot/
       chat-context.tsx    # React context for chatbot state
+      chat-logger.ts      # Debug logger for persona switching (diagnostics — pending removal decision)
       knowledge-base.ts   # Portfolio data for persona responses
       personas.ts         # NPC persona definitions (4 personas)
       system-prompt.ts    # System prompt templates for Claude Haiku
-public/                   # Static assets (project screenshots, hero image, icons)
+  __mocks__/
+    react-markdown.tsx    # Jest mock for react-markdown (ESM compatibility)
+public/                   # Static assets (project screenshots, hero image, icons, resume.pdf)
 ```
 
 ## Design System
