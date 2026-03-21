@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useState, useMemo, type ChangeEvent } from "react";
+import { track } from "@vercel/analytics";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { Send, X, RotateCcw, ChevronDown } from "lucide-react";
@@ -164,6 +165,7 @@ export function ChatLightbox() {
     (e: React.FormEvent) => {
       e.preventDefault();
       if (!input.trim() || status === "streaming") return;
+      track("chat_prompted");
       sendMessage({ text: input }, { body: { persona: activePersona } });
       setInput("");
     },
@@ -302,6 +304,7 @@ export function ChatLightbox() {
                 <button
                   key={q}
                   onClick={() => {
+                    track("chat_prompted");
                     sendMessage({ text: q }, { body: { persona: activePersona } });
                   }}
                   className="px-3.5 py-1.5 rounded-[var(--r-pill)] border border-[var(--color-border)] bg-transparent font-sans text-[13px] font-normal text-[var(--color-text-muted)] cursor-pointer transition-all duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-[var(--color-accent-gold)] hover:text-[var(--color-text)]"

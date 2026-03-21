@@ -7,6 +7,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { track } from "@vercel/analytics";
 import { type PersonaId, defaultPersona, personas } from "./personas";
 import type { UIMessage } from "ai";
 
@@ -59,6 +60,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   });
 
   const openChat = useCallback(() => {
+    track("chat_opened");
     setState((s) => ({ ...s, isOpen: true }));
   }, []);
 
